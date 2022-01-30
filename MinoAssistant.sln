@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinoAssistant", "MinoAssistant\MinoAssistant.csproj", "{8F7AB988-8064-44CD-886D-DC671478ACBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinoAssistant", "MinoAssistant\MinoAssistant.csproj", "{8F7AB988-8064-44CD-886D-DC671478ACBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinoAssistant.Test", "MinoAssistant.Test\MinoAssistant.Test.csproj", "{3D2BD93F-26DA-4081-86E9-267EFF74EA66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{8F7AB988-8064-44CD-886D-DC671478ACBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F7AB988-8064-44CD-886D-DC671478ACBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F7AB988-8064-44CD-886D-DC671478ACBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D2BD93F-26DA-4081-86E9-267EFF74EA66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D2BD93F-26DA-4081-86E9-267EFF74EA66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D2BD93F-26DA-4081-86E9-267EFF74EA66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D2BD93F-26DA-4081-86E9-267EFF74EA66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
