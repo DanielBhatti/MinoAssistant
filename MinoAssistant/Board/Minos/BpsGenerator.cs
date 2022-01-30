@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace MinoAssistant.Board.Minos
 {
-    public class BpsGenerator
+    public class BpsGenerator : IGenerator
     {
         private Queue<Mino> Queue { get; } = new();
         private Random Random { get; } = new();

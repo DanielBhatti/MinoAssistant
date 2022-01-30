@@ -35,6 +35,8 @@ namespace MinoAssistant.Board.Minos
             }
         }
 
+        // name is ambiguous, think of renaming
+        // the quantity of four minos vs all the minos of size four
         public static Mino[] GenerateFourMinos() => new Mino[]
         {
             GenerateMino(MinoType.FourminoJ),

@@ -2,31 +2,31 @@
 {
     public class Mino
     {
-        public int Size { get => Positions.Length; }
-        public Position[] Positions { get; private set; }
+        public int Size { get => RelativePositions.Length; }
+        public Position[] RelativePositions { get; private set; }
 
-        public Mino(Position[] positions) => Positions = positions;
+        public Mino(Position[] positions) => RelativePositions = positions;
 
         public Position[] RotateClockwise()
         {
-            for(int i = 0; i < Positions.Length; i++)
+            for(int i = 0; i < RelativePositions.Length; i++)
             {
-                int currentX = Positions[i].X;
-                int currentY = Positions[i].Y;
-                Positions[i] = new Position(currentY, -1 * currentX);
+                int currentX = RelativePositions[i].X;
+                int currentY = RelativePositions[i].Y;
+                RelativePositions[i] = new Position(currentY, -1 * currentX);
             }
-            return Positions;
+            return RelativePositions;
         }
 
         public Position[] RotateCounterClockwise()
         {
-            for (int i = 0; i < Positions.Length; i++)
+            for (int i = 0; i < RelativePositions.Length; i++)
             {
-                int currentX = Positions[i].X;
-                int currentY = Positions[i].Y;
-                Positions[i] = new Position(-1 * currentY, currentX);
+                int currentX = RelativePositions[i].X;
+                int currentY = RelativePositions[i].Y;
+                RelativePositions[i] = new Position(-1 * currentY, currentX);
             }
-            return Positions;
+            return RelativePositions;
         }
     }
 }
