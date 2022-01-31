@@ -2,7 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using System;
 
-namespace MinoAssistant
+namespace MinoAssistant.UI
 {
     public class ViewLocator : IDataTemplate
     {

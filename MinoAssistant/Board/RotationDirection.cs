@@ -1,6 +1,6 @@
 ﻿namespace MinoAssistant.Board
 {
-    public enum RotationType
+    public enum RotationDirection
     {
         None,
         Clockwise,

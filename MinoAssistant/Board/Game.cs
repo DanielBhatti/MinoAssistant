@@ -1,4 +1,5 @@
 ﻿using MinoAssistant.Board.Minos;
+using System.Linq;
 
 namespace MinoAssistant.Board
 {
@@ -10,7 +11,8 @@ namespace MinoAssistant.Board
 
         public Cell[,] Cells { get => Field.Cells; }
         public Mino CurrentMino { get; private set; }
-        public Position CurrentMinoPosition { get; private set; }
+        public Position CurrentMinoCenterPosition { get; private set; }
+        public Position[] CurrentMinoAbsolutePositions { get => GetMinoAbsolutePositions(CurrentMino, CurrentMinoCenterPosition, RotationDirection.None); }
         public Mino? HeldMino { get; private set; }
         public bool CanHold { get; private set; } = true;
 
@@ -22,29 +24,30 @@ namespace MinoAssistant.Board
             CurrentMino = Generator.Pop();
         }
 
+        public Position GetGhostPieceCenterPosition()
+        {
+            Position ghostPieceCenterPosition = CurrentMinoCenterPosition;
+            Position[] ghostPieceAbsolutePositions = GetMinoAbsolutePositions(CurrentMino, ghostPieceCenterPosition, RotationDirection.None);
+            while (Field.CanSetPositions(ghostPieceAbsolutePositions))
+            {
+                ghostPieceCenterPosition = ghostPieceCenterPosition.Add(0, -1);
+            }
+            return ghostPieceCenterPosition;
+        }
+
         public void HardDrop()
         {
-            Position previousPosition = CurrentMinoPosition;
-            MoveDown();
-            while (!previousPosition.Equals(CurrentMinoPosition)) MoveDown();
+            CurrentMinoCenterPosition = GetGhostPieceCenterPosition();
             PlaceMino();
         }
 
-        public void PlaceMino()
+        public void PlaceMino(object[]? values = null)
         {
-            Field.SetMinoPosition(CurrentMino, CurrentMinoPosition);
+            // the Field should ensure that illegal Mino positions aren't possible
+            // so we don't need to check to see if the position is legal
+            Field.SetPositions(CurrentMinoAbsolutePositions, values);
             CanHold = true;
         }
-
-        public void MoveDown() => MoveMino(Field, CurrentMino, CurrentMinoPosition, 0, -1, RotationType.None);
-
-        public void MoveLeft() => MoveMino(Field, CurrentMino, CurrentMinoPosition, -1, 0, RotationType.None);
-
-        public void MoveRight() => MoveMino(Field, CurrentMino, CurrentMinoPosition, -1, 0, RotationType.None);
-
-        public void RotateClockwise() => MoveMino(Field, CurrentMino, CurrentMinoPosition, 0, 0, RotationType.Clockwise);
-
-        public void RotateCounterClockwise() => MoveMino(Field, CurrentMino, CurrentMinoPosition, 0, 0, RotationType.CounterClockwise);
 
         public void Hold()
         {
@@ -60,19 +63,64 @@ namespace MinoAssistant.Board
             }
         }
 
-        private void MoveMino(Field field, Mino mino, Position currentPosition, int xMove, int yMove, RotationType rotationType)
+        public bool MoveMino(MoveDirection moveDirection, RotationDirection rotationDirection) => MoveMino(Field, CurrentMino, CurrentMinoCenterPosition, moveDirection, rotationDirection);
+
+        private bool MoveMino(Field field, Mino mino, Position currentPosition, MoveDirection moveDirection, RotationDirection rotationDirection)
         {
-            switch (rotationType)
+            Position newPosition;
+            switch (rotationDirection)
             {
-                case RotationType.None:
-                    Position newPosition = currentPosition + Position.Create(xMove, yMove);
-                    if (Field.CanSetMinoPosition(mino, newPosition)) field.SetMinoPosition(mino, newPosition);
+                case RotationDirection.None:
+                    switch (moveDirection)
+                    {
+                        case MoveDirection.None:
+                            return false;
+                        case MoveDirection.Left:
+                            newPosition = currentPosition.Add(-1, 0);
+                            if (Field.CanSetPositions(GetMinoAbsolutePositions(mino, newPosition, rotationDirection))) CurrentMinoCenterPosition = newPosition; 
+                            return true;
+                        case MoveDirection.Right:
+                            newPosition = currentPosition.Add(1, 0);
+                            if (Field.CanSetPositions(GetMinoAbsolutePositions(mino, newPosition, rotationDirection))) CurrentMinoCenterPosition = newPosition;
+                            return true;
+                        case MoveDirection.Down:
+                            newPosition = currentPosition.Add(0, -1);
+                            if (Field.CanSetPositions(GetMinoAbsolutePositions(mino, newPosition, rotationDirection))) CurrentMinoCenterPosition = newPosition;
+                            return true;
+                    }
                     break;
-                case RotationType.Clockwise:
+                case RotationDirection.Clockwise:
+                    switch (moveDirection)
+                    {
+                        case MoveDirection.None:
+                            newPosition = currentPosition;
+                            return true;
+                            break;
+                        case MoveDirection.Left:
+                            break;
+                        case MoveDirection.Right:
+                            break;
+                        case MoveDirection.Down:
+                            break;
+                    }
                     break;
-                case RotationType.CounterClockwise:
+                case RotationDirection.CounterClockwise:
+                    switch (moveDirection)
+                    {
+                        case MoveDirection.None:
+                            break;
+                        case MoveDirection.Left:
+                            break;
+                        case MoveDirection.Right:
+                            break;
+                        case MoveDirection.Down:
+                            break;
+                    }
                     break;
             }
+            return false;
         }
+
+        private Position[] GetMinoAbsolutePositions(Mino mino, Position centerPosition, RotationDirection rotationDirection) => mino.GetRotationPositions(rotationDirection).Select(rp => rp + centerPosition).ToArray();
     }
 }

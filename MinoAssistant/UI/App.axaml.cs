@@ -2,7 +2,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 
-namespace MinoAssistant
+namespace MinoAssistant.UI
 {
     public class App : Application
     {

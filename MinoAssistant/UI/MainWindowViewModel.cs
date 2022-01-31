@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MinoAssistant
+namespace MinoAssistant.UI
 {
     public class MainWindowViewModel : ViewModelBase
     {

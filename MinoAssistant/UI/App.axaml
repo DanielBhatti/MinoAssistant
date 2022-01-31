@@ -1,7 +1,7 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="using:MinoAssistant"
-             x:Class="MinoAssistant.App">
+             xmlns:local="using:MinoAssistant.UI"
+             x:Class="MinoAssistant.UI.App">
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>

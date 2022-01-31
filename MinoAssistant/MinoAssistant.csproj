@@ -7,6 +7,15 @@
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
     <None Remove=".gitignore" />
+    <None Remove="Assets\Cell\black_block.png" />
+    <None Remove="Assets\Cell\blue_block.png" />
+    <None Remove="Assets\Cell\green_block.png" />
+    <None Remove="Assets\Cell\orange_block.png" />
+    <None Remove="Assets\Cell\purple_block.png" />
+    <None Remove="Assets\Cell\red_block.png" />
+    <None Remove="Assets\Cell\teal_block.png" />
+    <None Remove="Assets\Cell\white_block.png" />
+    <None Remove="Assets\Cell\yellow_block.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.10.10" />

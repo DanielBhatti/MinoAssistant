@@ -7,26 +7,51 @@
 
         public Mino(Position[] positions) => RelativePositions = positions;
 
-        public Position[] RotateClockwise()
+        public void Rotate(RotationDirection rotationDirection)
         {
-            for(int i = 0; i < RelativePositions.Length; i++)
+            switch (rotationDirection)
             {
-                int currentX = RelativePositions[i].X;
-                int currentY = RelativePositions[i].Y;
-                RelativePositions[i] = new Position(currentY, -1 * currentX);
+                case RotationDirection.None:
+                    break;
+                case RotationDirection.Clockwise:
+                    RotateClockwise();
+                    break;
+                case RotationDirection.CounterClockwise:
+                    RotateCounterClockwise();
+                    break;
             }
-            return RelativePositions;
         }
 
-        public Position[] RotateCounterClockwise()
+        public Position[] GetRotationPositions(RotationDirection rotationDirection)
         {
-            for (int i = 0; i < RelativePositions.Length; i++)
+            Position[] rotatedPositions = (Position[])RelativePositions.Clone();
+
+            switch (rotationDirection)
             {
-                int currentX = RelativePositions[i].X;
-                int currentY = RelativePositions[i].Y;
-                RelativePositions[i] = new Position(-1 * currentY, currentX);
+                case RotationDirection.None:
+                    break;
+                case RotationDirection.Clockwise:
+                    for (int i = 0; i < RelativePositions.Length; i++)
+                    {
+                        int currentX = RelativePositions[i].X;
+                        int currentY = RelativePositions[i].Y;
+                        rotatedPositions[i] = new Position(currentY, -1 * currentX);
+                    }
+                    break;
+                case RotationDirection.CounterClockwise:
+                    for (int i = 0; i < RelativePositions.Length; i++)
+                    {
+                        int currentX = RelativePositions[i].X;
+                        int currentY = RelativePositions[i].Y;
+                        rotatedPositions[i] = new Position(-1 * currentY, currentX);
+                    }
+                    break;
             }
-            return RelativePositions;
+            return rotatedPositions;
         }
+
+        public void RotateClockwise() => RelativePositions = GetRotationPositions(RotationDirection.Clockwise);
+
+        public void RotateCounterClockwise() => RelativePositions = GetRotationPositions(RotationDirection.CounterClockwise);
     }
 }

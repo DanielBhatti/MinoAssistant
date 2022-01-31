@@ -1,4 +1,5 @@
-﻿using MinoAssistant.Board.Minos;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace MinoAssistant.Board
 {
@@ -10,26 +11,44 @@ namespace MinoAssistant.Board
 
         public Field(int width, int height) => Cells = new Cell[width, height];
 
-        public bool CanSetMinoPosition(Mino mino, Position position)
+        public bool CanSetPositions(ICollection<Position> positions)
         {
-            if (Cells[position.X, position.Y].IsFilled) return false;
-            foreach(Position relativePosition in mino.RelativePositions)
+            foreach(Position p in positions) if (!IsWithinBounds(p) || Cells[p.X, p.Y].IsFilled) return false;
+            return true;
+        }
+
+        public bool SetPositions(ICollection<Position> positions, ICollection<object>? values)
+        {
+            if (values is null) values = positions.Select(p => (object)true).ToList();
+            if (positions.Count != values.Count) return false;
+            if (!CanSetPositions(positions)) return false;
+
+            for (int i = 0; i < positions.Count; i++)
             {
-                Position p = relativePosition + position;
-                if (Cells[p.X, p.Y].IsFilled) return false;
+                Position p = positions.ElementAt(i);
+                Cells[p.X, p.Y].Fill(values.ElementAt(i));
             }
             return true;
         }
 
-        public void SetMinoPosition(Mino mino, Position position)
+        public bool CanRemovePositions(ICollection<Position> positions)
         {
-            if (!CanSetMinoPosition(mino, position)) return;
-
-            foreach(Position relativePosition in mino.RelativePositions)
-            {
-                Position p = relativePosition + position;
-                Cells[p.X, p.Y].Fill(true);
-            }
+            foreach (Position p in positions) if (!IsWithinBounds(p) || !Cells[p.X, p.Y].IsFilled) return false;
+            return true;
         }
+
+        public bool RemovePositions(ICollection<Position> positions)
+        {
+            if (!CanRemovePositions(positions)) return false;
+            foreach (Position p in positions) Cells[p.X, p.Y].Unfill();
+            return true;
+        }
+
+        public bool IsWithinBounds(ICollection<Position> positions) =>
+            positions
+            .Where(p => !IsWithinBounds(p))
+            .Count() == 0;
+
+        public bool IsWithinBounds(Position position) => (position.X >= 0 && position.Y >= 0 && position.X < Width && position.Y < Height);
     }
 }
