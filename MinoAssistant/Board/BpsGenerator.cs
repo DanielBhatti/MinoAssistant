@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MinoAssistant.Board.Minos
+namespace MinoAssistant.Board
 {
     public class BpsGenerator : IGenerator
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MinoAssistant.Board.Minos
+namespace MinoAssistant.Board
 {
     public static class MinoFactory
     {

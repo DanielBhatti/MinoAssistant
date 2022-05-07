@@ -1,5 +1,8 @@
 ﻿using MinoAssistant.Board;
-using MinoAssistant.Board.Minos;
+using System.Collections.Generic;
+using System.Threading;
+using System.Linq;
+using ReactiveUI;
 
 namespace MinoAssistant.UI
 {
@@ -7,68 +10,45 @@ namespace MinoAssistant.UI
     {
         private Game Game { get; }
 
+        public Timer Timer { get; }
+
         public int Width { get => Game.Cells.GetLength(0); }
         public int Height { get => Game.Cells.GetLength(1); }
-        public Cell[,] Cells { get => Game.Cells; }
+        private List<List<Cell>> _cells;
+        public List<List<Cell>> Cells
+        {
+            get => _cells;
+            set => this.RaiseAndSetIfChanged(ref _cells, value);
+        }
         public Mino CurrentMino { get => Game.CurrentMino; }
         public Mino? HeldMino { get => Game.HeldMino; }
 
-        public GameViewModel(Game game) => Game = game;
-
-        public void Move(MoveDirection moveType, RotationDirection rotationType)
+        public GameViewModel(Game game)
         {
-            switch (moveType)
-            {
-                case MoveDirection.None:
-                    switch (rotationType)
-                    {
-                        case RotationDirection.None:
-                            break;
-                        case RotationDirection.Clockwise:
-                            break;
-                        case RotationDirection.CounterClockwise:
-                            break;
-                    }
-                    break;
-                case MoveDirection.Left:
-                    switch (rotationType)
-                    {
-                        case RotationDirection.None:
-                            break;
-                        case RotationDirection.Clockwise:
-                            break;
-                        case RotationDirection.CounterClockwise:
-                            break;
-                    }
-                    break;
-                case MoveDirection.Right:
-                    switch (rotationType)
-                    {
-                        case RotationDirection.None:
-                            break;
-                        case RotationDirection.Clockwise:
-                            break;
-                        case RotationDirection.CounterClockwise:
-                            break;
-                    }
-                    break;
-                case MoveDirection.Down:
-                    switch (rotationType)
-                    {
-                        case RotationDirection.None:
-                            break;
-                        case RotationDirection.Clockwise:
-                            break;
-                        case RotationDirection.CounterClockwise:
-                            break;
-                    }
-                    break;
-            }
+            Game = game;
+            Timer = new Timer(TimerTick, null, 1000, 1000);
+        }
+
+        public void Move(MoveDirection moveDirection)
+        {
+            Game.MoveMino(moveDirection);
+            ResetLockTimer();
+        }
+
+        public void Rotate(RotationDirection rotationDirection)
+        {
+            Game.RotateMino(rotationDirection);
+            ResetLockTimer();
         }
 
         private void ResetLockTimer()
         {
 
+        }
+
+        private void TimerTick(object? sender)
+        {
+            Move(MoveDirection.Down);
         }
     }
 }

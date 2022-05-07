@@ -4,5 +4,19 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MinoAssistant.UI.GameView">
-  Welcome to Avalonia!
+	<Grid
+		RowDefinitions="Auto, *, Auto"
+		ColumnDefinitions="Auto, *, Auto">
+		<TextBlock
+			Grid.Row="0"
+			Grid.Column="1"
+			Text="MinoAssistant"
+			HorizontalAlignment="Center"/>
+		<TabControl
+			Grid.Row="1"
+			Grid.Column="1">
+			<TabItem>
+			</TabItem>
+		</TabControl>
+	</Grid>
 </UserControl>

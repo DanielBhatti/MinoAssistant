@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MinoAssistant.Board.Minos
+namespace MinoAssistant.Board
 {
     public interface IGenerator
     {
