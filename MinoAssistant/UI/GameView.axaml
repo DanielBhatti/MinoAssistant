@@ -16,6 +16,8 @@
 			Grid.Row="1"
 			Grid.Column="1">
 			<TabItem>
+				<ListBox Items="{Binding FieldViewModel.Cells}">
+				</ListBox>
 			</TabItem>
 		</TabControl>
 	</Grid>

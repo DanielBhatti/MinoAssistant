@@ -3,15 +3,15 @@
         xmlns:vm="using:MinoAssistant.UI"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:local="using:MinoAssistant.UI"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="MinoAssistant.UI.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="MinoAssistant">
+        Title="MinoAssistant.UI">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-	
-	<local:GameView/>
+
+    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
 </Window>

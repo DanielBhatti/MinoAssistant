@@ -1,7 +1,6 @@
 ﻿using MinoAssistant.Board;
 using System.Collections.Generic;
 using System.Threading;
-using System.Linq;
 using ReactiveUI;
 
 namespace MinoAssistant.UI
@@ -12,20 +11,16 @@ namespace MinoAssistant.UI
 
         public Timer Timer { get; }
 
-        public int Width { get => Game.Cells.GetLength(0); }
-        public int Height { get => Game.Cells.GetLength(1); }
-        private List<List<Cell>> _cells;
-        public List<List<Cell>> Cells
-        {
-            get => _cells;
-            set => this.RaiseAndSetIfChanged(ref _cells, value);
-        }
+        public FieldViewModel FieldViewModel { get; }
+        public int Width { get => Game.Field.Width; }
+        public int Height { get => Game.Field.Height; }
         public Mino CurrentMino { get => Game.CurrentMino; }
         public Mino? HeldMino { get => Game.HeldMino; }
 
         public GameViewModel(Game game)
         {
             Game = game;
+            FieldViewModel = new FieldViewModel(Game.Field);
             Timer = new Timer(TimerTick, null, 1000, 1000);
         }
 

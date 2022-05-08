@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "MinoAssistant": {
+      "commandName": "Project"
+    },
+    "MinoAssistant.UI": {
+      "commandName": "Project"
+    }
+  }
+}

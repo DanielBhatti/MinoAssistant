@@ -5,11 +5,10 @@ namespace MinoAssistant.Board
     public class Game
     {
         private GameSettings GameSettings { get; }
-        private Field Field { get; }
         private IGenerator Generator { get; }
         private IRotationSystem RotationSystem { get; }
 
-        public Cell[,] Cells { get => Field.Cells; }
+        public Field Field { get; }
         public Mino CurrentMino { get; private set; }
         public Position CurrentMinoCenterPosition { get; private set; }
         public Position[] CurrentMinoAbsolutePositions { get => GetMinoAbsolutePositions(CurrentMino, CurrentMinoCenterPosition, RotationDirection.None); }
