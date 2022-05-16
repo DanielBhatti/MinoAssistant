@@ -3,15 +3,50 @@
         xmlns:vm="using:MinoAssistant.UI"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:MinoAssistant.UI;assembly=MinoAssistant.UI"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="MinoAssistant.UI.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="MinoAssistant.UI">
 
-    <Design.DataContext>
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+	<Design.DataContext>
+		<vm:MainWindowViewModel/>
+	</Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+	<Window.Resources>
+		<local:CellToMinoConverter x:Key="CellToMinoConverter"/>
+	</Window.Resources>
+
+	<Grid RowDefinitions="Auto, *, Auto" ColumnDefinitions="Auto, *, Auto">
+		<TextBlock
+			Grid.Row="0"
+			Grid.Column="1"
+			Text="MinoAssistant"
+			HorizontalAlignment="Center"/>
+		<ItemsControl
+			Grid.Row="1"
+			Grid.Column="1"
+			Items="{Binding GameViewModel.CellViewModels}"
+			HorizontalAlignment="Center">
+			<ItemsControl.ItemsPanel>
+				<ItemsPanelTemplate>
+					<StackPanel Orientation="Horizontal"/>
+				</ItemsPanelTemplate>
+			</ItemsControl.ItemsPanel>
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<ItemsControl Items="{Binding .}"
+							 ScrollViewer.VerticalScrollBarVisibility="Disabled"
+							 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Image Source="{Binding Cell, Converter={StaticResource CellToMinoConverter}}" Height="30" Width="30"/>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+	</Grid>
 
 </Window>

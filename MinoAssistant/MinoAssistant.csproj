@@ -1,21 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <AvaloniaResource Include="Assets\**" />
     <None Remove=".gitignore" />
-    <None Remove="Assets\Cell\black_block.png" />
-    <None Remove="Assets\Cell\blue_block.png" />
-    <None Remove="Assets\Cell\green_block.png" />
-    <None Remove="Assets\Cell\orange_block.png" />
-    <None Remove="Assets\Cell\purple_block.png" />
-    <None Remove="Assets\Cell\red_block.png" />
-    <None Remove="Assets\Cell\teal_block.png" />
-    <None Remove="Assets\Cell\white_block.png" />
-    <None Remove="Assets\Cell\yellow_block.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.10.10" />
@@ -23,10 +13,5 @@
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.10" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.10" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="UI\MainWindow.axaml.cs">
-      <DependentUpon>MainWindow.axaml</DependentUpon>
-    </Compile>
   </ItemGroup>
 </Project>

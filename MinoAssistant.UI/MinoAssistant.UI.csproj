@@ -10,6 +10,15 @@
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
     <None Remove=".gitignore" />
+    <None Remove="Assets\black-block.png" />
+    <None Remove="Assets\blue-block.png" />
+    <None Remove="Assets\green-block.png" />
+    <None Remove="Assets\orange-block.png" />
+    <None Remove="Assets\purple-block.png" />
+    <None Remove="Assets\red-block.png" />
+    <None Remove="Assets\teal-block.png" />
+    <None Remove="Assets\white-block.png" />
+    <None Remove="Assets\yellow-block.png" />
   </ItemGroup>
   <ItemGroup>
     <!--This helps with theme dll-s trimming.
@@ -25,5 +34,13 @@
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.12" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.12" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MinoAssistant\MinoAssistant.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="GameView.axaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

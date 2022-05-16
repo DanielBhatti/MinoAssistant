@@ -1,10 +1,32 @@
 ﻿namespace MinoAssistant.Board
 {
-    public record struct GameSettings(
-        double Gravity = 1.0,
-        double GravityIncrease = 0.0,
-        double LockDelaySeconds = 0.3,
-        int VisibleNextPieces = 5,
-        bool IsShowingGhostPiece = true
-        );
+    public struct GameSettings
+    {
+        public string UnfilledCellValue;
+        public string GhostPieceValue;
+        public int FieldWidth;
+        public int FieldHeight;
+        public int OriginX;
+        public int OriginY;
+        public double Gravity;
+        public double GravityIncrease;
+        public double LockDelaySeconds;
+        public int VisibleNextPieces;
+        public bool IsShowingGhostPiece;
+
+        public GameSettings(string unfilledCellValue, string ghostPieceValue, int fieldWidth = 10, int fieldHeight = 25, int originX = 5, int originY = 20, double gravity = 1.0, double gravityIncrease = 0.0, double lockDelaySeconds = 0.3, int visibleNextPieces = 5, bool isShowingGhostPiece = true)
+        {
+            UnfilledCellValue = unfilledCellValue;
+            GhostPieceValue = ghostPieceValue;
+            FieldWidth = fieldWidth;
+            FieldHeight = fieldHeight;
+            OriginX = originX;
+            OriginY = originY;
+            Gravity = gravity;
+            GravityIncrease = gravityIncrease;
+            LockDelaySeconds = lockDelaySeconds;
+            VisibleNextPieces = visibleNextPieces;
+            IsShowingGhostPiece = isShowingGhostPiece;
+        }
+    }
 }

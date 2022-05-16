@@ -11,14 +11,20 @@ namespace MinoAssistant.Board
 
         public Cell this[int x, int y] { get => Cells[x, y]; }
 
-        public Field(int width, int height) => Cells = new Cell[width, height];
+        public Field(int width, int height, object unfilledCellValue)
+        {
+            Cells = new Cell[width, height];
+            for (int i = 0; i < Width; i++) for (int j = 0; j < Height; j++) Cells[i, j] = new Cell(unfilledCellValue, false);
+        }
 
+        public bool CanSetPosition(Position position) => CanSetPositions(new List<Position> { position });
         public bool CanSetPositions(ICollection<Position> positions)
         {
             foreach(Position p in positions) if (!IsWithinBounds(p) || Cells[p.X, p.Y].IsFilled) return false;
             return true;
         }
 
+        public bool SetPosition(Position position, object value) => SetPositions(new List<Position> { position }, new List<object> { value });
         public bool SetPositions(ICollection<Position> positions, ICollection<object>? values)
         {
             if (values is null) values = positions.Select(p => (object)true).ToList();
@@ -33,12 +39,14 @@ namespace MinoAssistant.Board
             return true;
         }
 
+        public bool CanRemovePosition(Position position) => CanRemovePositions(new List<Position> { position });
         public bool CanRemovePositions(ICollection<Position> positions)
         {
-            foreach (Position p in positions) if (!IsWithinBounds(p) || !Cells[p.X, p.Y].IsFilled) return false;
+            foreach (Position p in positions) if (!IsWithinBounds(p) || Cells[p.X, p.Y] == null || !Cells[p.X, p.Y].IsFilled) return false;
             return true;
         }
 
+        public bool RemovePosition(Position position) => RemovePositions(new List<Position> { position });
         public bool RemovePositions(ICollection<Position> positions)
         {
             if (!CanRemovePositions(positions)) return false;
@@ -46,11 +54,10 @@ namespace MinoAssistant.Board
             return true;
         }
 
+        public bool IsWithinBounds(Position position) => (position.X >= 0 && position.Y >= 0 && position.X < Width && position.Y < Height);
         public bool IsWithinBounds(ICollection<Position> positions) =>
             positions
             .Where(p => !IsWithinBounds(p))
             .Count() == 0;
-
-        public bool IsWithinBounds(Position position) => (position.X >= 0 && position.Y >= 0 && position.X < Width && position.Y < Height);
     }
 }
