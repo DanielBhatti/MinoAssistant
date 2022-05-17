@@ -15,19 +15,24 @@ namespace MinoAssistant.UI
             if (value.GetType() != typeof(Cell)) throw new ArgumentException($"Argument must be of type {nameof(Cell)}.");
 
             Cell cell = (Cell)value;
-            if (cell.VisibleValue == null || (string)cell.VisibleValue == "") return null;
+            if (cell.Value == null) return null;
 
-            if (cell.VisibleValue.GetType() == typeof(string))
+            if (cell.Value.GetType() == typeof(string))
             {
-                try
+                string targetPath = (string)cell.Value;
+                if (File.Exists(targetPath))
                 {
-                    string targetPath = (string)cell.VisibleValue;
-                    return new Bitmap(targetPath);
+                    try
+                    {
+
+                        return new Bitmap(targetPath);
+                    }
+                    catch
+                    {
+                        return cell.Value;
+                    }
                 }
-                catch
-                {
-                    return cell.VisibleValue;
-                }
+                else return cell.Value;
             }
             return null;
         }

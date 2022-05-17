@@ -15,9 +15,15 @@ namespace MinoAssistant.UI
             this.RaisePropertyChanged(nameof(Cell));
         }
 
-        public void UnFill()
+        public void UnFill(object value)
         {
-            Cell.Unfill();
+            Cell.Unfill(value);
+            this.RaisePropertyChanged(nameof(Cell));
+        }
+
+        public void SetValue(object value)
+        {
+            Cell.SetValue(value);
             this.RaisePropertyChanged(nameof(Cell));
         }
     }

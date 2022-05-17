@@ -25,11 +25,11 @@ namespace MinoAssistant.Board
                 case MinoType.FourminoS:
                     return new Mino(new Position[] { new Position(-1, -1), new Position(0, -1), new Position(0, 0), new Position(1, 0) });
                 case MinoType.FourminoZ:
-                    return new Mino(new Position[] { new Position(-1, 1), new Position(0, 1), new Position(0, 0), new Position(0, 1) });
+                    return new Mino(new Position[] { new Position(-1, 1), new Position(0, 1), new Position(0, 0), new Position(0, -1) });
                 case MinoType.FourminoI:
-                    return new Mino(new Position[] { new Position(-1, 0), new Position(0, 0), new Position(1, 0), new Position(2, 0) });
+                    return new Mino(new Position[] { new Position(-2, 0), new Position(-1, 0), new Position(0, 0), new Position(1, 0) });
                 case MinoType.FourminoT:
-                    return new Mino(new Position[] { new Position(-1, 0), new Position(0, 0), new Position(1, 0), new Position(1, 0) });
+                    return new Mino(new Position[] { new Position(-1, 0), new Position(0, 0), new Position(1, 0), new Position(0, 1) });
                 default:
                     throw new Exception("Should never reach this exception");
             }

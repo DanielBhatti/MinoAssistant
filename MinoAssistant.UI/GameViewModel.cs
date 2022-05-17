@@ -29,7 +29,7 @@ namespace MinoAssistant.UI
             for (int i = 0; i < Game.Field.Width; i++)
             {
                 CellViewModels.Add(new List<CellViewModel>());
-                for (int j = 0; j < Game.Field.Height; j++)
+                for (int j = Game.Field.Height - 1; j >= 0; j--)
                 {
                     CellViewModels[i].Add(new CellViewModel(Game.Field[i, j]));
                 }
@@ -66,8 +66,10 @@ namespace MinoAssistant.UI
 
         private void InitializeGame()
         {
-            for (int i = 0; i < Game.Field.Width; i++) for (int j = 0; j < Game.Field.Height; j++) CellViewModels[i][j].Cell.Fill($"({i}, {j})");
+            for (int i = 0; i < Game.Field.Width; i++) for (int j = 0; j < Game.Field.Height; j++) CellViewModels[i][j].Cell.SetValue(@"C:\Users\bhatt\Repositories\MinoAssistant\MinoAssistant.UI\Assets\white-block.png");
             RaisePropertyChangedAllCells();
+            foreach (Position p in Game.CurrentMinoAbsolutePositions) CellViewModels[p.X][p.Y].SetValue(@"C:\Users\bhatt\Repositories\MinoAssistant\MinoAssistant.UI\Assets\red-block.png");
+            RaisePropertyChangedCells(Game.CurrentMinoAbsolutePositions);
         }
 
         private void RaisePropertyChangedAllCells()
@@ -86,7 +88,7 @@ namespace MinoAssistant.UI
         {
             foreach (Position position in positions)
             {
-                CellViewModel cellViewModel = CellViewModels[position.Y][position.Y];
+                CellViewModel cellViewModel = CellViewModels[position.X][position.Y];
                 cellViewModel.RaisePropertyChanged(nameof(cellViewModel.Cell));
             }
         }

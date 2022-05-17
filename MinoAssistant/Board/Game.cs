@@ -31,7 +31,7 @@ namespace MinoAssistant.Board
         public Position GetGhostPieceCenterPosition()
         {
             Position ghostPieceCenterPosition = CurrentMinoCenterPosition;
-            while (Field.CanSetPositions(GetMinoAbsolutePositions(CurrentMino, ghostPieceCenterPosition.Add(0, -1), RotationDirection.None))) ghostPieceCenterPosition = ghostPieceCenterPosition.Add(0, -1);
+            while (Field.CanFillCells(GetMinoAbsolutePositions(CurrentMino, ghostPieceCenterPosition.Add(0, -1), RotationDirection.None))) ghostPieceCenterPosition = ghostPieceCenterPosition.Add(0, -1);
             return ghostPieceCenterPosition;
         }
 
@@ -48,7 +48,7 @@ namespace MinoAssistant.Board
             for (int i = 0; i < values.Length; i++) values[i] = value;
             // the Field should ensure that illegal Mino positions aren't possible
             // so we don't need to check to see if the position is legal, it is assumed that it is
-            if (Field.SetPositions(CurrentMinoAbsolutePositions, values))
+            if (Field.FillCells(CurrentMinoAbsolutePositions, values))
             {
                 ContinueToNextPiece();
                 return MotionResult.SoftDropped;
@@ -92,7 +92,7 @@ namespace MinoAssistant.Board
                     return MotionResult.Fail;
             }
 
-            if (Field.CanSetPositions(GetMinoAbsolutePositions(CurrentMino, newPosition, RotationDirection.None)))
+            if (Field.CanFillCells(GetMinoAbsolutePositions(CurrentMino, newPosition, RotationDirection.None)))
             {
                 // order matters here, the remove/add ghost piece method is removing/adding the ghost piece based on the piece's current position
                 RemoveGhostPiece();
@@ -112,8 +112,7 @@ namespace MinoAssistant.Board
             foreach(Position position in GetMinoAbsolutePositions(CurrentMino, GetGhostPieceCenterPosition(), RotationDirection.None))
             {
                 Cell cell = Field[position.X, position.Y];
-                cell.ActualValueVisibilityOverride = true;
-                cell.VisibleValue = cell.UnfilledValue;
+                cell.SetValue(Field.UnfilledCellValue);
             }
         }
 
@@ -122,8 +121,7 @@ namespace MinoAssistant.Board
             foreach (Position position in GetMinoAbsolutePositions(CurrentMino, GetGhostPieceCenterPosition(), RotationDirection.None))
             {
                 Cell cell = Field[position.X, position.Y];
-                cell.ActualValueVisibilityOverride = false;
-                cell.VisibleValue = GameSettings.GhostPieceValue;
+                cell.SetValue(GameSettings.GhostPieceValue);
             }
         }
 

@@ -2,31 +2,27 @@
 {
     public class Cell
     {
-        private object _visibleValue;
-        public object VisibleValue
-        {
-            get
-            {
-                if (ActualValueVisibilityOverride) return ActualValue;
-                else return _visibleValue;
-            }
-            set => _visibleValue = value;
-        }
-        public object ActualValue { get; private set; }
-        public bool IsFilled { get => !UnfilledValue.Equals(ActualValue); }
-        public object UnfilledValue { get; set; }
-        public bool ActualValueVisibilityOverride { get; set; }
+        public object? Value { get; private set; }
+        public bool IsFilled { get; private set; }
 
-        public Cell(object unfilledValue, bool actualValueVisibilityOverride)
+        public Cell(object? value, bool isFilled)
         {
-            ActualValue = unfilledValue;
-            UnfilledValue = unfilledValue;
-            VisibleValue = unfilledValue;
-            ActualValueVisibilityOverride = actualValueVisibilityOverride;
+            Value = value;
+            IsFilled = isFilled;
         }
 
-        public void Fill(object value) => ActualValue = value;
+        public void Fill(object? value)
+        {
+            IsFilled = true;
+            Value = value;
+        }
 
-        public void Unfill() => ActualValue = UnfilledValue;
+        public void Unfill(object? value)
+        {
+            IsFilled = false;
+            Value = value;
+        }
+
+        public void SetValue(object? value) => Value = value;
     }
 }

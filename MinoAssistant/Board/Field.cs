@@ -7,50 +7,52 @@ namespace MinoAssistant.Board
     {
         public int Width { get => Cells.GetLength(0); }
         public int Height { get => Cells.GetLength(1); }
+        public object UnfilledCellValue { get; }
         private Cell[,] Cells { get; }
 
-        public Cell this[int x, int y] { get => Cells[x, y]; }
+        // note that for index access the second index is reversed (e.g. 0th component gives the last component)
+        // this is so the field goes left to right, bottom to top
+        public Cell this[int x, int y] { get => Cells[x, Height - y - 1]; }
 
         public Field(int width, int height, object unfilledCellValue)
         {
             Cells = new Cell[width, height];
-            for (int i = 0; i < Width; i++) for (int j = 0; j < Height; j++) Cells[i, j] = new Cell(unfilledCellValue, false);
+            UnfilledCellValue = unfilledCellValue;
+            for (int i = 0; i < Width; i++) for (int j = 0; j < Height; j++) Cells[i, j] = new Cell(UnfilledCellValue, false);
         }
 
-        public bool CanSetPosition(Position position) => CanSetPositions(new List<Position> { position });
-        public bool CanSetPositions(ICollection<Position> positions)
+        public bool CanFillCell(Position position) => CanFillCells(new List<Position> { position });
+        public bool CanFillCells(ICollection<Position> positions)
         {
             foreach(Position p in positions) if (!IsWithinBounds(p) || Cells[p.X, p.Y].IsFilled) return false;
             return true;
         }
 
-        public bool SetPosition(Position position, object value) => SetPositions(new List<Position> { position }, new List<object> { value });
-        public bool SetPositions(ICollection<Position> positions, ICollection<object>? values)
+        public bool FillCell(Position position, object value) => FillCells(new List<Position> { position }, value);
+        public bool FillCells(ICollection<Position> positions, object value)
         {
-            if (values is null) values = positions.Select(p => (object)true).ToList();
-            if (positions.Count != values.Count) return false;
-            if (!CanSetPositions(positions)) return false;
+            if (!CanFillCells(positions)) return false;
 
             for (int i = 0; i < positions.Count; i++)
             {
                 Position p = positions.ElementAt(i);
-                Cells[p.X, p.Y].Fill(values.ElementAt(i));
+                Cells[p.X, p.Y].Fill(value);
             }
             return true;
         }
 
-        public bool CanRemovePosition(Position position) => CanRemovePositions(new List<Position> { position });
-        public bool CanRemovePositions(ICollection<Position> positions)
+        public bool CanUnfillCell(Position position) => CanUnfillCells(new List<Position> { position });
+        public bool CanUnfillCells(ICollection<Position> positions)
         {
             foreach (Position p in positions) if (!IsWithinBounds(p) || Cells[p.X, p.Y] == null || !Cells[p.X, p.Y].IsFilled) return false;
             return true;
         }
 
-        public bool RemovePosition(Position position) => RemovePositions(new List<Position> { position });
-        public bool RemovePositions(ICollection<Position> positions)
+        public bool UnfillCell(Position position) => UnfillCells(new List<Position> { position });
+        public bool UnfillCells(ICollection<Position> positions)
         {
-            if (!CanRemovePositions(positions)) return false;
-            foreach (Position p in positions) Cells[p.X, p.Y].Unfill();
+            if (!CanUnfillCells(positions)) return false;
+            foreach (Position p in positions) Cells[p.X, p.Y].Unfill(UnfilledCellValue);
             return true;
         }
 

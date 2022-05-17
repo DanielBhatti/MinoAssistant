@@ -40,7 +40,10 @@
 							 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
 						<ItemsControl.ItemTemplate>
 							<DataTemplate>
-								<Image Source="{Binding Cell, Converter={StaticResource CellToMinoConverter}}" Height="30" Width="30"/>
+								<Panel>
+									<Image Source="{Binding Cell, Converter={StaticResource CellToMinoConverter}}" Height="30" Width="30"/>
+									<TextBlock Text="{Binding Cell, Converter={StaticResource CellToMinoConverter}}"/>
+								</Panel>
 							</DataTemplate>
 						</ItemsControl.ItemTemplate>
 					</ItemsControl>
