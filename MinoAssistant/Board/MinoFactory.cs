@@ -4,59 +4,84 @@ namespace MinoAssistant.Board
 {
     public static class MinoFactory
     {
-        public static Mino GenerateMino(MinoType minoType)
+        public static Mino GenerateMino(MinoType minoType, MinoColor minoColor)
         {
             switch (minoType)
             {
                 case MinoType.Onemino:
-                    return new Mino(new Position[] { new Position(0, 0) });
+                    return new Mino(new Position[] { new Position(0, 0) }, minoColor);
                 case MinoType.Twomino:
-                    return new Mino(new Position[] { new Position(0, 0), new Position(1, 0) });
+                    return new Mino(new Position[] { new Position(0, 0), new Position(1, 0) }, minoColor);
                 case MinoType.ThreeminoI:
-                    return new Mino(new Position[] { new Position(-1, 0), new Position(0, 0), new Position(1, 0) });
+                    return new Mino(new Position[] { new Position(-1, 0), new Position(0, 0), new Position(1, 0) }, minoColor);
                 case MinoType.ThreeminoL:
-                    return new Mino(new Position[] { new Position(0, 1), new Position(0, 0), new Position(0, 1) });
+                    return new Mino(new Position[] { new Position(0, 1), new Position(0, 0), new Position(0, 1) }, minoColor);
                 case MinoType.FourminoO:
-                    return new Mino(new Position[] { new Position(0, 0), new Position(0, 1), new Position(1, 0), new Position(1, 1) });
+                    return new Mino(new Position[] { new Position(0, 0), new Position(0, 1), new Position(1, 0), new Position(1, 1) }, minoColor);
                 case MinoType.FourminoL:
-                    return new Mino(new Position[] { new Position(-1, 0), new Position(0, 0), new Position(1, 0), new Position(1, 1) });
+                    return new Mino(new Position[] { new Position(-1, 0), new Position(0, 0), new Position(1, 0), new Position(1, 1) }, minoColor);
                 case MinoType.FourminoJ:
-                    return new Mino(new Position[] { new Position(-1, 1), new Position(-1, 0), new Position(0, 0), new Position(1, 0) });
+                    return new Mino(new Position[] { new Position(-1, 1), new Position(-1, 0), new Position(0, 0), new Position(1, 0) }, minoColor);
                 case MinoType.FourminoS:
-                    return new Mino(new Position[] { new Position(-1, -1), new Position(0, -1), new Position(0, 0), new Position(1, 0) });
+                    return new Mino(new Position[] { new Position(-1, -1), new Position(0, -1), new Position(0, 0), new Position(1, 0) }, minoColor);
                 case MinoType.FourminoZ:
-                    return new Mino(new Position[] { new Position(-1, 1), new Position(0, 1), new Position(0, 0), new Position(0, -1) });
+                    return new Mino(new Position[] { new Position(-1, 1), new Position(0, 1), new Position(0, 0), new Position(0, -1) }, minoColor);
                 case MinoType.FourminoI:
-                    return new Mino(new Position[] { new Position(-2, 0), new Position(-1, 0), new Position(0, 0), new Position(1, 0) });
+                    return new Mino(new Position[] { new Position(-2, 0), new Position(-1, 0), new Position(0, 0), new Position(1, 0) }, minoColor);
                 case MinoType.FourminoT:
-                    return new Mino(new Position[] { new Position(-1, 0), new Position(0, 0), new Position(1, 0), new Position(0, 1) });
+                    return new Mino(new Position[] { new Position(-1, 0), new Position(0, 0), new Position(1, 0), new Position(0, 1) }, minoColor);
                 default:
-                    throw new Exception("Should never reach this exception");
+                    throw new Exception($"{nameof(MinoFactory)} {nameof(GenerateBasicMino)} method does not support creation of {nameof(MinoType)} {minoType}.");
             }
         }
 
-        // name is ambiguous, think of renaming
-        // the quantity of four minos vs all the minos of size four
-        public static Mino[] GenerateFourMinos() => new Mino[]
+        public static Mino GenerateBasicMino(MinoType minoType)
         {
-            GenerateMino(MinoType.FourminoJ),
-            GenerateMino(MinoType.FourminoL),
-            GenerateMino(MinoType.FourminoO),
-            GenerateMino(MinoType.FourminoI),
-            GenerateMino(MinoType.FourminoS),
-            GenerateMino(MinoType.FourminoZ),
-            GenerateMino(MinoType.FourminoT)
+            switch (minoType)
+            {
+                case MinoType.Onemino:
+                    return GenerateMino(minoType, MinoColor.Black);
+                case MinoType.Twomino:
+                    return GenerateMino(minoType, MinoColor.Black);
+                case MinoType.ThreeminoI:
+                    return GenerateMino(minoType, MinoColor.Black);
+                case MinoType.ThreeminoL:
+                    return GenerateMino(minoType, MinoColor.Black);
+                case MinoType.FourminoO:
+                    return GenerateMino(minoType, MinoColor.Yellow);
+                case MinoType.FourminoL:
+                    return GenerateMino(minoType, MinoColor.Orange);
+                case MinoType.FourminoJ:
+                    return GenerateMino(minoType, MinoColor.Blue);
+                case MinoType.FourminoS:
+                    return GenerateMino(minoType, MinoColor.Red);
+                case MinoType.FourminoZ:
+                    return GenerateMino(minoType, MinoColor.Green);
+                case MinoType.FourminoI:
+                    return GenerateMino(minoType, MinoColor.Teal);
+                case MinoType.FourminoT:
+                    return GenerateMino(minoType, MinoColor.Purple);
+                default:
+                    throw new Exception($"{nameof(MinoFactory)} {nameof(GenerateBasicMino)} method does not support creation of {nameof(MinoType)} {minoType}.");
+            }
+        }
+
+        // the quantity of four minos vs all the minos of size four
+        public static Mino[] GenerateBasicFourMinos() => new Mino[]
+        {
+            GenerateBasicMino(MinoType.FourminoJ),
+            GenerateBasicMino(MinoType.FourminoL),
+            GenerateBasicMino(MinoType.FourminoO),
+            GenerateBasicMino(MinoType.FourminoI),
+            GenerateBasicMino(MinoType.FourminoS),
+            GenerateBasicMino(MinoType.FourminoZ),
+            GenerateBasicMino(MinoType.FourminoT)
         };
 
-        public static Mino[] GenerateThreeMinos() => new Mino[]
+        public static Mino[] GenerateBasicThreeMinos() => new Mino[]
         {
-            GenerateMino(MinoType.ThreeminoI),
-            GenerateMino(MinoType.ThreeminoL),
-            GenerateMino(MinoType.FourminoO),
-            GenerateMino(MinoType.FourminoI),
-            GenerateMino(MinoType.FourminoS),
-            GenerateMino(MinoType.FourminoZ),
-            GenerateMino(MinoType.FourminoT)
+            GenerateBasicMino(MinoType.ThreeminoI),
+            GenerateBasicMino(MinoType.ThreeminoL),
         };
     }
 }

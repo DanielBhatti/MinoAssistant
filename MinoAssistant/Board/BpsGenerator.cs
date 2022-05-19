@@ -25,7 +25,7 @@ namespace MinoAssistant.Board
 
         private void FillQueue()
         {
-            List<Mino> minos = MinoFactory.GenerateFourMinos().ToList();
+            List<Mino> minos = MinoFactory.GenerateBasicFourMinos().ToList();
             while (minos.Count > 0)
             {
                 int randomIndex = Random.Next(0, minos.Count);

@@ -47,12 +47,6 @@ namespace MinoAssistant.UI
             ResetLockTimer();
         }
 
-        public void Rotate(RotationDirection rotationDirection)
-        {
-            Game.RotateMino(rotationDirection);
-            ResetLockTimer();
-        }
-
         private void ResetLockTimer()
         {
 

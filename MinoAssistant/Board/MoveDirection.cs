@@ -5,6 +5,8 @@
         None,
         Down,
         Left,
-        Right
+        Right,
+        ClockwiseRotation,
+        CounterClockwiseRotation
     }
 }

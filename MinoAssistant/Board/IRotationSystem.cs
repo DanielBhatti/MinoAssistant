@@ -2,6 +2,6 @@
 {
     public interface IRotationSystem
     {
-        MotionResult Rotate(Field field, Mino mino, RotationDirection rotationDirection);
+        Position Rotate(Field field, Mino mino, RotationDirection rotationDirection, Position centerPosition);
     }
 }

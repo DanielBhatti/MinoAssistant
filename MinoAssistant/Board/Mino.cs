@@ -4,8 +4,13 @@
     {
         public int Size { get => RelativePositions.Length; }
         public Position[] RelativePositions { get; private set; }
+        public MinoColor MinoColor { get; set; }
 
-        public Mino(Position[] positions) => RelativePositions = positions;
+        public Mino(Position[] positions, MinoColor minoColor)
+        {
+            RelativePositions = positions;
+            MinoColor = minoColor;
+        }
 
         public void Rotate(RotationDirection rotationDirection)
         {
