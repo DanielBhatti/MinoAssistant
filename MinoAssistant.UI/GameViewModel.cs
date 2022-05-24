@@ -23,7 +23,7 @@ namespace MinoAssistant.UI
         public GameViewModel(Game game)
         {
             Game = game;
-            Timer = new Timer(TimerTick, null, 1000, 1000);
+            Timer = new Timer(TimerTick, null, 100, 100);
 
             CellViewModels = new();
             for (int i = 0; i < Game.Field.Width; i++)
@@ -40,30 +40,20 @@ namespace MinoAssistant.UI
 
         public void Move(MoveDirection moveDirection)
         {
-            Position[] previousPositions = Game.CurrentMinoAbsolutePositions;
             Game.MoveMino(moveDirection);
-            Position[] newPositions = Game.CurrentMinoAbsolutePositions;
             RaisePropertyChangedAllCells();
-            ResetLockTimer();
         }
 
-        private void ResetLockTimer()
+        private void TimerTick(object? sender)
         {
-
-        }
-
-        private async void TimerTick(object? sender)
-        {
-            Move(MoveDirection.Down);
-            await Task.Run(() => this.RaisePropertyChanged(nameof(GameViewModel)));
+            RaisePropertyChangedAllCells();
         }
 
         private void InitializeGame()
         {
-            for (int i = 0; i < Game.Field.Width; i++) for (int j = 0; j < Game.Field.Height; j++) CellViewModels[i][j].Cell.SetValue(@"C:\Users\bhatt\Repositories\MinoAssistant\MinoAssistant.UI\Assets\white-block.png");
+            //for (int i = 0; i < Game.Field.Width; i++) for (int j = 0; j < Game.Field.Height; j++) CellViewModels[i][j].Cell.SetValue(@"C:\Users\bhatt\Repositories\MinoAssistant\MinoAssistant.UI\Assets\white-block.png");
             RaisePropertyChangedAllCells();
-            foreach (Position p in Game.CurrentMinoAbsolutePositions) CellViewModels[p.X][p.Y].SetValue(@"C:\Users\bhatt\Repositories\MinoAssistant\MinoAssistant.UI\Assets\red-block.png");
-            RaisePropertyChangedCells(Game.CurrentMinoAbsolutePositions);
+            //RaisePropertyChangedCells(Game.CurrentMinoAbsolutePositions);
         }
 
         private void RaisePropertyChangedAllCells()

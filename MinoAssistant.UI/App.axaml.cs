@@ -18,7 +18,7 @@ namespace MinoAssistant.UI
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                GameSettings gameSettings = new GameSettings(@"C:\Users\bhatt\Repositories\MinoAssistant\MinoAssistant.UI\Assets\white-block.png", "");
+                GameSettings gameSettings = new GameSettings(@"C:\Users\bhatt\Repositories\MinoAssistant\MinoAssistant.UI\Assets\white-block.png", @"C:\Users\bhatt\Repositories\MinoAssistant\MinoAssistant.UI\Assets\teal-block.png");
                 IGenerator generator = new BpsGenerator();
                 IRotationSystem rotationSystem = new SrsRotationSystem();
                 Game game = new Game(gameSettings, generator, rotationSystem);

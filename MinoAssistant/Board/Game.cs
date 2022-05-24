@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading;
 
 namespace MinoAssistant.Board
 {
@@ -8,14 +9,17 @@ namespace MinoAssistant.Board
         private IGenerator Generator { get; }
         private IRotationSystem RotationSystem { get; }
 
+        private Position CurrentMinoCenterPosition { get; set; }
+        private Position Origin { get; }
+        private Timer LockTimer { get; }
+        private Timer GravityTimer { get; }
+
         public Field Field { get; }
         public Mino CurrentMino { get; private set; }
-        public Position CurrentMinoCenterPosition { get; private set; }
         public Position[] CurrentMinoAbsolutePositions { get => GetMinoAbsolutePositions(CurrentMino, CurrentMinoCenterPosition, RotationDirection.None); }
         public Position[] GhostPieceAbsolutePositions { get => GetMinoAbsolutePositions(CurrentMino, GetGhostPieceCenterPosition(), RotationDirection.None); }
         public Mino? HeldMino { get; private set; }
         public bool CanHold { get; private set; } = true;
-        public Position Origin { get; }
 
         public Game(GameSettings gameSettings, IGenerator generator, IRotationSystem rotationSystem)
         {
@@ -24,18 +28,19 @@ namespace MinoAssistant.Board
             Generator = generator;
             RotationSystem = rotationSystem;
             Origin = new Position(GameSettings.OriginX, GameSettings.OriginY);
+            GravityTimer = new Timer(GravityTimerTick, null, (int)gameSettings.Gravity, (int)gameSettings.Gravity);
 
             ContinueToNextPiece();
         }
 
-        public MotionResult HardDrop()
+        public MotionType HardDrop()
         {
             CurrentMinoCenterPosition = GetGhostPieceCenterPosition();
-            if (PlaceMino() == MotionResult.SoftDropped) return MotionResult.HardDropped;
-            else return MotionResult.Fail;
+            if (PlaceMino() == MotionType.SoftDropped) return MotionType.HardDropped;
+            else return MotionType.Fail;
         }
 
-        public MotionResult PlaceMino()
+        public MotionType PlaceMino()
         {
             object[] values = new object[CurrentMinoAbsolutePositions.Length];
             for (int i = 0; i < values.Length; i++) values[i] = CurrentMino.MinoColor;
@@ -44,12 +49,12 @@ namespace MinoAssistant.Board
             if (Field.FillCells(CurrentMinoAbsolutePositions, values))
             {
                 ContinueToNextPiece();
-                return MotionResult.SoftDropped;
+                return MotionType.SoftDropped;
             }
-            else return MotionResult.Fail;
+            else return MotionType.Fail;
         }
 
-        public MotionResult Hold()
+        public MotionType Hold()
         {
             if (CanHold)
             {
@@ -60,54 +65,69 @@ namespace MinoAssistant.Board
                 }
                 else (HeldMino, CurrentMino) = (CurrentMino, HeldMino);
                 CanHold = false;
-                return MotionResult.Held;
+                return MotionType.Held;
             }
-            else return MotionResult.Fail;
+            else return MotionType.Fail;
         }
 
         public MotionResult MoveMino(MoveDirection moveDirection)
         {
-            Position newPosition;
             MotionResult motionResult;
             switch (moveDirection)
             {
                 case MoveDirection.None:
-                    return MotionResult.None;
+                    motionResult = new MotionResult(CurrentMino, MotionType.None, CurrentMinoCenterPosition, CurrentMinoCenterPosition);
+                    break;
                 case MoveDirection.Left:
-                    newPosition = CurrentMinoCenterPosition.Add(-1, 0);
-                    motionResult = MotionResult.Moved;
+                    motionResult = new MotionResult(CurrentMino, MotionType.Moved, CurrentMinoCenterPosition, CurrentMinoCenterPosition.Add(-1, 0));
                     break;
                 case MoveDirection.Right:
-                    newPosition = CurrentMinoCenterPosition.Add(1, 0);
-                    motionResult = MotionResult.Moved;
+                    motionResult = new MotionResult(CurrentMino, MotionType.Moved, CurrentMinoCenterPosition, CurrentMinoCenterPosition.Add(1, 0));
                     break;
                 case MoveDirection.Down:
-                    newPosition = CurrentMinoCenterPosition.Add(0, -1);
-                    motionResult = MotionResult.Moved;
+                    motionResult = new MotionResult(CurrentMino, MotionType.Moved, CurrentMinoCenterPosition, CurrentMinoCenterPosition.Add(0, -1));
                     break;
                 case MoveDirection.ClockwiseRotation:
-                    newPosition = RotationSystem.Rotate(Field, CurrentMino, RotationDirection.Clockwise, CurrentMinoCenterPosition);
-                    motionResult = MotionResult.Rotated;
+                    motionResult = RotationSystem.Rotate(Field, CurrentMino, RotationDirection.Clockwise, CurrentMinoCenterPosition);
                     break;
                 case MoveDirection.CounterClockwiseRotation:
-                    newPosition = RotationSystem.Rotate(Field, CurrentMino, RotationDirection.CounterClockwise, CurrentMinoCenterPosition);
-                    motionResult = MotionResult.Rotated;
+                    motionResult = RotationSystem.Rotate(Field, CurrentMino, RotationDirection.CounterClockwise, CurrentMinoCenterPosition);
                     break;
                 default:
-                    return MotionResult.Fail;
+                    motionResult = new MotionResult(CurrentMino, MotionType.Fail, CurrentMinoCenterPosition, CurrentMinoCenterPosition);
+                    break;
             }
 
-            if (Field.CanFillCells(GetMinoAbsolutePositions(CurrentMino, newPosition, RotationDirection.None)))
+            if (Field.CanFillCells(GetMinoAbsolutePositions(CurrentMino, motionResult.NewCenterPosition, RotationDirection.None)))
             {
                 // order matters here, the remove/add ghost piece method is removing/adding the ghost piece based on the piece's current position
                 Field.UnfillCells(CurrentMinoAbsolutePositions);
                 RemoveGhostPiece();
-                CurrentMinoCenterPosition = newPosition;
+                CurrentMinoCenterPosition = motionResult.NewCenterPosition;
                 Field.FillCells(CurrentMinoAbsolutePositions, CurrentMino.MinoColor);
                 AddGhostPiece();
                 return motionResult;
             }
-            return MotionResult.Fail;
+
+            if (motionResult.MotionType != MotionType.None) ResetLockTimer();
+            return motionResult;
+        }
+
+        public void Pause()
+        {
+
+        }
+
+        public void Unpause()
+        {
+
+        }
+
+        private void GravityTimerTick(object? sender) => MoveMino(MoveDirection.Down);
+
+        private void ResetLockTimer()
+        {
+            
         }
 
         private Position[] GetMinoAbsolutePositions(Mino mino, Position centerPosition, RotationDirection rotationDirection) => mino.GetRotationPositions(rotationDirection).Select(rp => rp + centerPosition).ToArray();
