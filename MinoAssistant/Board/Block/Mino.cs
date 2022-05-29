@@ -1,4 +1,6 @@
-﻿namespace MinoAssistant.Board
+﻿using MinoAssistant.Board.Motion.Rotation;
+
+namespace MinoAssistant.Board.Block
 {
     public class Mino
     {
@@ -59,7 +61,7 @@
             return rotatedPositions;
         }
 
-        public void RotateClockwise()
+        private void RotateClockwise()
         {
             RelativePositions = GetRotationPositions(RotationDirection.Clockwise);
             switch (RotationState)
@@ -79,7 +81,7 @@
             }
         }
 
-        public void RotateCounterClockwise()
+        private void RotateCounterClockwise()
         {
             RelativePositions = GetRotationPositions(RotationDirection.CounterClockwise);
             switch (RotationState)

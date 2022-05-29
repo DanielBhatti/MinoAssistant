@@ -1,28 +1,30 @@
-﻿namespace MinoAssistant.Board
+﻿using MinoAssistant.Board.Block;
+
+namespace MinoAssistant.Board
 {
     public class Cell
     {
-        public object? Value { get; private set; }
+        public MinoColor Value { get; private set; }
         public bool IsFilled { get; private set; }
 
-        public Cell(object? value, bool isFilled)
+        public Cell(MinoColor value, bool isFilled)
         {
             Value = value;
             IsFilled = isFilled;
         }
 
-        public void Fill(object? value)
+        public void Fill(MinoColor value)
         {
             IsFilled = true;
             Value = value;
         }
 
-        public void Unfill(object? value)
+        public void Unfill(MinoColor value)
         {
             IsFilled = false;
             Value = value;
         }
 
-        public void SetValue(object? value) => Value = value;
+        public void SetValue(MinoColor value) => Value = value;
     }
 }

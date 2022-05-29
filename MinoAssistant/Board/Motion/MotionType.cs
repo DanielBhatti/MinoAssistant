@@ -1,4 +1,4 @@
-﻿namespace MinoAssistant.Board
+﻿namespace MinoAssistant.Board.Motion
 {
     public enum MotionType
     {

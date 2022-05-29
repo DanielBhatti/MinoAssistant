@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MinoAssistant.Board
+namespace MinoAssistant.Board.History
 {
     public class PlacementStateNode
     {

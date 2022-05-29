@@ -1,8 +1,9 @@
-﻿using System;
+﻿using MinoAssistant.Board.Block;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MinoAssistant.Board
+namespace MinoAssistant.Board.Generator
 {
     public class BpsGenerator : IGenerator
     {

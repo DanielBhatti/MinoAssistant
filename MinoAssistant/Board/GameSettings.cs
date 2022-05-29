@@ -1,9 +1,11 @@
-﻿namespace MinoAssistant.Board
+﻿using MinoAssistant.Board.Block;
+
+namespace MinoAssistant.Board
 {
     public struct GameSettings
     {
-        public string UnfilledCellValue;
-        public string GhostPieceValue;
+        public MinoColor UnfilledCellValue;
+        public MinoColor GhostPieceValue;
         public int FieldWidth;
         public int FieldHeight;
         public int OriginX;
@@ -14,7 +16,7 @@
         public int VisibleNextPieces;
         public bool IsShowingGhostPiece;
 
-        public GameSettings(string unfilledCellValue, string ghostPieceValue, int fieldWidth = 10, int fieldHeight = 25, int originX = 5, int originY = 20, double gravity = 1.0, double gravityIncrease = 0.0, double lockDelaySeconds = 0.3, int visibleNextPieces = 5, bool isShowingGhostPiece = true)
+        public GameSettings(MinoColor unfilledCellValue, MinoColor ghostPieceValue, int fieldWidth = 10, int fieldHeight = 25, int originX = 5, int originY = 20, double gravity = 1000.0, double gravityIncrease = 0.0, double lockDelaySeconds = 0.3, int visibleNextPieces = 5, bool isShowingGhostPiece = true)
         {
             UnfilledCellValue = unfilledCellValue;
             GhostPieceValue = ghostPieceValue;

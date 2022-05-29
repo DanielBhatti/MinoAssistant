@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using ReactiveUI;
 using System.Collections.Generic;
+using MinoAssistant.Board.Block;
+using MinoAssistant.Board.Motion;
 
 namespace MinoAssistant.UI
 {
@@ -29,16 +31,35 @@ namespace MinoAssistant.UI
             for (int i = 0; i < Game.Field.Width; i++)
             {
                 CellViewModels.Add(new List<CellViewModel>());
-                for (int j = Game.Field.Height - 1; j >= 0; j--)
-                {
-                    CellViewModels[i].Add(new CellViewModel(Game.Field[i, j]));
-                }
+                for (int j = 0; j < Game.Field.Height; j++) CellViewModels[i].Add(new CellViewModel(Game.Field[i, j]));
             }
 
             InitializeGame();
         }
 
-        public void Move(MoveDirection moveDirection)
+        public void MoveLeftCommand() => Move(MoveDirection.Left);
+
+        public void MoveRightCommand() => Move(MoveDirection.Right);
+
+        public void MoveDownCommand() => Move(MoveDirection.Down);
+
+        public void RotateCounterClockwiseCommand() => Move(MoveDirection.CounterClockwiseRotation);
+
+        public void RotateClockwiseCommand() => Move(MoveDirection.ClockwiseRotation);
+
+        public void HoldCommand()
+        {
+            Game.Hold();
+            RaisePropertyChangedAllCells();
+        }
+
+        public void HardDropCommand()
+        {
+            Game.HardDrop();
+            RaisePropertyChangedAllCells();
+        }
+
+        private void Move(MoveDirection moveDirection)
         {
             Game.MoveMino(moveDirection);
             RaisePropertyChangedAllCells();
@@ -63,7 +84,7 @@ namespace MinoAssistant.UI
                 for (int j = 0; j < Game.Field.Height; j++)
                 {
                     CellViewModel cellViewModel = CellViewModels[i][j];
-                    cellViewModel.RaisePropertyChanged(nameof(cellViewModel.Cell));
+                    cellViewModel.RaisePropertyChanged(nameof(cellViewModel.Value));
                 }
             }
         }
@@ -73,7 +94,7 @@ namespace MinoAssistant.UI
             foreach (Position position in positions)
             {
                 CellViewModel cellViewModel = CellViewModels[position.X][position.Y];
-                cellViewModel.RaisePropertyChanged(nameof(cellViewModel.Cell));
+                cellViewModel.RaisePropertyChanged(nameof(cellViewModel.Value));
             }
         }
     }

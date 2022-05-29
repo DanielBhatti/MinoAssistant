@@ -1,4 +1,6 @@
-﻿namespace MinoAssistant.Board
+﻿using MinoAssistant.Board.Block;
+
+namespace MinoAssistant.Board.Motion.Rotation
 {
     public class SrsRotationSystem : IRotationSystem
     {

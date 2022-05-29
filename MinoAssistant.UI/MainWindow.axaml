@@ -9,14 +9,24 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="MinoAssistant.UI">
 
+	<Window.KeyBindings>
+		<KeyBinding Gesture="Left" Command="{Binding GameViewModel.MoveLeftCommand}"/>
+		<KeyBinding Gesture="Right" Command="{Binding GameViewModel.MoveRightCommand}"/>
+		<KeyBinding Gesture="Down" Command="{Binding GameViewModel.MoveDownCommand}"/>
+		<KeyBinding Gesture="Space" Command="{Binding GameViewModel.HardDropCommand}"/>
+		<KeyBinding Gesture="Z" Command="{Binding GameViewModel.RotateCounterClockwiseCommand}"/>
+		<KeyBinding Gesture="X" Command="{Binding GameViewModel.RotateClockwiseCommand}"/>
+		<KeyBinding Gesture="C" Command="{Binding GameViewModel.HoldCommand}"/>
+	</Window.KeyBindings>
+
 	<Design.DataContext>
 		<vm:MainWindowViewModel/>
 	</Design.DataContext>
 
 	<Window.Resources>
-		<local:CellToMinoConverter x:Key="CellToMinoConverter"/>
+		<local:MinoColorToBitmapConverter x:Key="MinoColorToBitmapConverter"/>
 	</Window.Resources>
-
+	
 	<Grid RowDefinitions="Auto, *, Auto" ColumnDefinitions="Auto, *, Auto">
 		<TextBlock
 			Grid.Row="0"
@@ -41,8 +51,7 @@
 						<ItemsControl.ItemTemplate>
 							<DataTemplate>
 								<Panel>
-									<Image Source="{Binding Cell, Converter={StaticResource CellToMinoConverter}}" Height="30" Width="30"/>
-									<TextBlock Text="{Binding Cell, Converter={StaticResource CellToMinoConverter}}"/>
+									<Image Source="{Binding Value, Converter={StaticResource MinoColorToBitmapConverter}}" Height="30" Width="30"/>
 								</Panel>
 							</DataTemplate>
 						</ItemsControl.ItemTemplate>

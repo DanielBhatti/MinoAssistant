@@ -2,6 +2,8 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using MinoAssistant.Board;
+using MinoAssistant.Board.Generator;
+using MinoAssistant.Board.Motion.Rotation;
 using MinoAssistant.UI;
 using System.Collections.Generic;
 
@@ -18,9 +20,9 @@ namespace MinoAssistant.UI
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                GameSettings gameSettings = new GameSettings(@"C:\Users\bhatt\Repositories\MinoAssistant\MinoAssistant.UI\Assets\white-block.png", @"C:\Users\bhatt\Repositories\MinoAssistant\MinoAssistant.UI\Assets\teal-block.png");
+                GameSettings gameSettings = new GameSettings(Board.Block.MinoColor.White, Board.Block.MinoColor.Black);
                 IGenerator generator = new BpsGenerator();
-                IRotationSystem rotationSystem = new SrsRotationSystem();
+                IRotationSystem rotationSystem = new ClassicRotationSystem();
                 Game game = new Game(gameSettings, generator, rotationSystem);
 
                 desktop.MainWindow = new MainWindow

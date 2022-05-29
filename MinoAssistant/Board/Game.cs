@@ -1,4 +1,9 @@
-﻿using System.Linq;
+﻿using MinoAssistant.Board.Block;
+using MinoAssistant.Board.Generator;
+using MinoAssistant.Board.Motion;
+using MinoAssistant.Board.Motion.Rotation;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 
 namespace MinoAssistant.Board
@@ -11,6 +16,7 @@ namespace MinoAssistant.Board
 
         private Position CurrentMinoCenterPosition { get; set; }
         private Position Origin { get; }
+        private Stopwatch LockStopwatch { get; }
         private Timer LockTimer { get; }
         private Timer GravityTimer { get; }
 
@@ -20,6 +26,7 @@ namespace MinoAssistant.Board
         public Position[] GhostPieceAbsolutePositions { get => GetMinoAbsolutePositions(CurrentMino, GetGhostPieceCenterPosition(), RotationDirection.None); }
         public Mino? HeldMino { get; private set; }
         public bool CanHold { get; private set; } = true;
+        public GameState GameState { get; private set; }
 
         public Game(GameSettings gameSettings, IGenerator generator, IRotationSystem rotationSystem)
         {
@@ -29,12 +36,16 @@ namespace MinoAssistant.Board
             RotationSystem = rotationSystem;
             Origin = new Position(GameSettings.OriginX, GameSettings.OriginY);
             GravityTimer = new Timer(GravityTimerTick, null, (int)gameSettings.Gravity, (int)gameSettings.Gravity);
+            LockStopwatch = new Stopwatch();
+            //LockTimer = new Timer(LockTimerTick, null, (int)(gameSettings.LockDelaySeconds / 2), (int)(gameSettings.LockDelaySeconds / 2));
+            GameState = GameState.Playing;
 
             ContinueToNextPiece();
         }
 
         public MotionType HardDrop()
         {
+            Field.SetCellValues(CurrentMinoAbsolutePositions, GameSettings.UnfilledCellValue);
             CurrentMinoCenterPosition = GetGhostPieceCenterPosition();
             if (PlaceMino() == MotionType.SoftDropped) return MotionType.HardDropped;
             else return MotionType.Fail;
@@ -42,11 +53,7 @@ namespace MinoAssistant.Board
 
         public MotionType PlaceMino()
         {
-            object[] values = new object[CurrentMinoAbsolutePositions.Length];
-            for (int i = 0; i < values.Length; i++) values[i] = CurrentMino.MinoColor;
-            // the Field should ensure that illegal Mino positions aren't possible
-            // so we don't need to check to see if the position is legal, it is assumed that it is
-            if (Field.FillCells(CurrentMinoAbsolutePositions, values))
+            if (Field.FillCells(CurrentMinoAbsolutePositions, CurrentMino.MinoColor))
             {
                 ContinueToNextPiece();
                 return MotionType.SoftDropped;
@@ -56,22 +63,37 @@ namespace MinoAssistant.Board
 
         public MotionType Hold()
         {
+            Field.SetCellValues(CurrentMinoAbsolutePositions, GameSettings.UnfilledCellValue);
+            RemoveGhostPiece();
+
             if (CanHold)
             {
                 if (HeldMino is null)
                 {
                     HeldMino = CurrentMino;
-                    CurrentMino = Generator.Pop();
+                    ContinueToNextPiece();
                 }
-                else (HeldMino, CurrentMino) = (CurrentMino, HeldMino);
-                CanHold = false;
+                else
+                {
+                    (HeldMino, CurrentMino) = (CurrentMino, HeldMino);
+                    CanHold = false;
+                    CurrentMinoCenterPosition = Origin;
+                }
+
+                Field.SetCellValues(CurrentMinoAbsolutePositions, CurrentMino.MinoColor);
+                AddGhostPiece();
                 return MotionType.Held;
+
             }
-            else return MotionType.Fail;
+            Field.SetCellValues(CurrentMinoAbsolutePositions, CurrentMino.MinoColor);
+            AddGhostPiece();
+            return MotionType.Fail;
         }
 
         public MotionResult MoveMino(MoveDirection moveDirection)
         {
+            Field.SetCellValues(CurrentMinoAbsolutePositions, GameSettings.UnfilledCellValue);
+            RemoveGhostPiece();
             MotionResult motionResult;
             switch (moveDirection)
             {
@@ -98,36 +120,88 @@ namespace MinoAssistant.Board
                     break;
             }
 
-            if (Field.CanFillCells(GetMinoAbsolutePositions(CurrentMino, motionResult.NewCenterPosition, RotationDirection.None)))
+            RotationDirection rotationDirection;
+            switch (moveDirection)
             {
-                // order matters here, the remove/add ghost piece method is removing/adding the ghost piece based on the piece's current position
-                Field.UnfillCells(CurrentMinoAbsolutePositions);
-                RemoveGhostPiece();
-                CurrentMinoCenterPosition = motionResult.NewCenterPosition;
-                Field.FillCells(CurrentMinoAbsolutePositions, CurrentMino.MinoColor);
-                AddGhostPiece();
-                return motionResult;
+                case MoveDirection.Left:
+                case MoveDirection.Right:
+                case MoveDirection.Down:
+                    rotationDirection = RotationDirection.None;
+                    break;
+                case MoveDirection.ClockwiseRotation:
+                    rotationDirection = RotationDirection.Clockwise;
+                    break;
+                case MoveDirection.CounterClockwiseRotation:
+                    rotationDirection = RotationDirection.CounterClockwise;
+                    break;
+                default:
+                    rotationDirection = RotationDirection.None;
+                    break;
             }
 
-            if (motionResult.MotionType != MotionType.None) ResetLockTimer();
+            if (Field.CanFillCells(GetMinoAbsolutePositions(CurrentMino, motionResult.NewCenterPosition, rotationDirection)))
+            {
+                CurrentMinoCenterPosition = motionResult.NewCenterPosition;
+                CurrentMino.Rotate(rotationDirection);
+            }
+
+            Field.SetCellValues(CurrentMinoAbsolutePositions, CurrentMino.MinoColor);
+            AddGhostPiece();
             return motionResult;
         }
 
         public void Pause()
         {
-
+            GameState = GameState.Paused;
         }
 
         public void Unpause()
         {
-
+            GameState = GameState.Playing;
         }
 
         private void GravityTimerTick(object? sender) => MoveMino(MoveDirection.Down);
 
-        private void ResetLockTimer()
+        private void LockTimerTick(object? sender)
         {
-            
+            MotionResult motionResult = new MotionResult(CurrentMino, MotionType.Moved, CurrentMinoCenterPosition, CurrentMinoCenterPosition.Add(0, -1));
+            if (motionResult.MotionType == MotionType.Fail || motionResult.MotionType == MotionType.None)
+            {
+                if (!LockStopwatch.IsRunning)
+                {
+                    LockStopwatch.Start();
+                }
+                if (LockStopwatch.ElapsedMilliseconds > 1000 * GameSettings.LockDelaySeconds) PlaceMino();
+            }
+            else LockStopwatch.Reset();
+        }
+
+        private bool IsLineFilled(int rowIndex)
+        {
+            for (int i = 0; i < Field.Width; i++) if (Field.IsFilledCell(new Position(i, rowIndex))) return false;
+            return true;
+        }
+
+        private bool ClearLine(int rowIndex)
+        {
+            if (!IsLineFilled(rowIndex)) return false;
+            for (int j = 0; j < Field.Width; j++) Field.UnfillCell(new Position(j, rowIndex), GameSettings.UnfilledCellValue);
+            for (int i = rowIndex + 1; i < Field.Height; i++)
+            {
+                for (int j = 0; j < Field.Width; j++)
+                {
+                    Position currentPosition = new Position(i, j);
+                    Position belowPosition = new Position(i - 1, j);
+                    if (Field.IsFilledCell(currentPosition))
+                    {
+                        ReadOnlyCell cell = Field[currentPosition.X, currentPosition.Y];
+                        MinoColor value = cell.Value;
+                        Field.UnfillCell(currentPosition, GameSettings.UnfilledCellValue);
+                        Field.FillCell(belowPosition, value);
+                    }
+                }
+            }
+            return true;
         }
 
         private Position[] GetMinoAbsolutePositions(Mino mino, Position centerPosition, RotationDirection rotationDirection) => mino.GetRotationPositions(rotationDirection).Select(rp => rp + centerPosition).ToArray();
@@ -141,20 +215,12 @@ namespace MinoAssistant.Board
 
         private void RemoveGhostPiece()
         {
-            foreach(Position position in GetMinoAbsolutePositions(CurrentMino, GetGhostPieceCenterPosition(), RotationDirection.None))
-            {
-                Cell cell = Field[position.X, position.Y];
-                cell.SetValue(Field.UnfilledCellValue);
-            }
+            foreach(Position position in GetMinoAbsolutePositions(CurrentMino, GetGhostPieceCenterPosition(), RotationDirection.None)) Field.SetCellValue(position, GameSettings.UnfilledCellValue);
         }
 
         private void AddGhostPiece()
         {
-            foreach (Position position in GetMinoAbsolutePositions(CurrentMino, GetGhostPieceCenterPosition(), RotationDirection.None))
-            {
-                Cell cell = Field[position.X, position.Y];
-                cell.SetValue(GameSettings.GhostPieceValue);
-            }
+            foreach (Position position in GetMinoAbsolutePositions(CurrentMino, GetGhostPieceCenterPosition(), RotationDirection.None)) Field.SetCellValue(position, GameSettings.GhostPieceValue);
         }
 
         private void ContinueToNextPiece()
@@ -162,6 +228,15 @@ namespace MinoAssistant.Board
             CanHold = true;
             CurrentMino = Generator.Pop();
             CurrentMinoCenterPosition = Origin;
+
+            if (!Field.CanFillCells(CurrentMinoAbsolutePositions))
+            {
+                GameState = GameState.GameOver;
+                return;
+            }
+
+            Field.SetCellValues(CurrentMinoAbsolutePositions, CurrentMino.MinoColor);
+            Field.SetCellValues(GhostPieceAbsolutePositions, GameSettings.GhostPieceValue);
         }
     }
 }

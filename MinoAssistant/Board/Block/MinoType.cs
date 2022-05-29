@@ -1,4 +1,4 @@
-﻿namespace MinoAssistant.Board
+﻿namespace MinoAssistant.Board.Block
 {
     public enum MinoType
     {
