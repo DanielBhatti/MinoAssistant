@@ -4,32 +4,32 @@ namespace MinoAssistant.Board.Block
 {
     public static class MinoFactory
     {
-        public static Mino GenerateMino(MinoType minoType, MinoColor minoColor)
+        public static Mino GenerateMino(MinoType minoType, MinoColor minoColor, MinoColor ghostMinoColor)
         {
             switch (minoType)
             {
                 case MinoType.Onemino:
-                    return new Mino(new Position[] { new Position(0, 0) }, minoColor);
+                    return new Mino(new Position[] { (0, 0) }, minoColor, ghostMinoColor);
                 case MinoType.Twomino:
-                    return new Mino(new Position[] { new Position(0, 0), new Position(1, 0) }, minoColor);
+                    return new Mino(new Position[] { (0, 0), (1, 0) }, minoColor, ghostMinoColor);
                 case MinoType.ThreeminoI:
-                    return new Mino(new Position[] { new Position(-1, 0), new Position(0, 0), new Position(1, 0) }, minoColor);
+                    return new Mino(new Position[] { (-1, 0), (0, 0), (1, 0) }, minoColor, ghostMinoColor);
                 case MinoType.ThreeminoL:
-                    return new Mino(new Position[] { new Position(0, 1), new Position(0, 0), new Position(0, 1) }, minoColor);
+                    return new Mino(new Position[] { (0, 1), (0, 0), (0, 1) }, minoColor, ghostMinoColor);
                 case MinoType.FourminoO:
-                    return new Mino(new Position[] { new Position(0, 0), new Position(0, 1), new Position(1, 0), new Position(1, 1) }, minoColor);
+                    return new Mino(new Position[] { (0, 0), (0, 1), (1, 0), (1, 1) }, minoColor, ghostMinoColor);
                 case MinoType.FourminoL:
-                    return new Mino(new Position[] { new Position(-1, 0), new Position(0, 0), new Position(1, 0), new Position(1, 1) }, minoColor);
+                    return new Mino(new Position[] { (-1, 0), (0, 0), (1, 0), (1, 1) }, minoColor, ghostMinoColor);
                 case MinoType.FourminoJ:
-                    return new Mino(new Position[] { new Position(-1, 1), new Position(-1, 0), new Position(0, 0), new Position(1, 0) }, minoColor);
+                    return new Mino(new Position[] { (-1, 1), (-1, 0), (0, 0), (1, 0) }, minoColor, ghostMinoColor);
                 case MinoType.FourminoS:
-                    return new Mino(new Position[] { new Position(-1, -1), new Position(0, -1), new Position(0, 0), new Position(1, 0) }, minoColor);
+                    return new Mino(new Position[] { (-1, -1), (0, -1), (0, 0), (1, 0) }, minoColor, ghostMinoColor);
                 case MinoType.FourminoZ:
-                    return new Mino(new Position[] { new Position(-1, 1), new Position(0, 1), new Position(0, 0), new Position(0, -1) }, minoColor);
+                    return new Mino(new Position[] { (-1, 1), (0, 1), (0, 0), (0, -1) }, minoColor, ghostMinoColor);
                 case MinoType.FourminoI:
-                    return new Mino(new Position[] { new Position(-2, 0), new Position(-1, 0), new Position(0, 0), new Position(1, 0) }, minoColor);
+                    return new Mino(new Position[] { (-2, 0), (-1, 0), (0, 0), (1, 0) }, minoColor, ghostMinoColor);
                 case MinoType.FourminoT:
-                    return new Mino(new Position[] { new Position(-1, 0), new Position(0, 0), new Position(1, 0), new Position(0, 1) }, minoColor);
+                    return new Mino(new Position[] { (-1, 0), (0, 0), (1, 0), (0, 1) }, minoColor, ghostMinoColor);
                 default:
                     throw new Exception($"{nameof(MinoFactory)} {nameof(GenerateBasicMino)} method does not support creation of {nameof(MinoType)} {minoType}.");
             }
@@ -40,27 +40,27 @@ namespace MinoAssistant.Board.Block
             switch (minoType)
             {
                 case MinoType.Onemino:
-                    return GenerateMino(minoType, MinoColor.Black);
+                    return GenerateMino(minoType, MinoColor.Black, MinoColor.BlackFaded);
                 case MinoType.Twomino:
-                    return GenerateMino(minoType, MinoColor.Black);
+                    return GenerateMino(minoType, MinoColor.Black, MinoColor.BlackFaded);
                 case MinoType.ThreeminoI:
-                    return GenerateMino(minoType, MinoColor.Black);
+                    return GenerateMino(minoType, MinoColor.Black, MinoColor.BlackFaded);
                 case MinoType.ThreeminoL:
-                    return GenerateMino(minoType, MinoColor.Black);
+                    return GenerateMino(minoType, MinoColor.Black, MinoColor.BlackFaded);
                 case MinoType.FourminoO:
-                    return GenerateMino(minoType, MinoColor.Yellow);
+                    return GenerateMino(minoType, MinoColor.Yellow, MinoColor.YellowFaded);
                 case MinoType.FourminoL:
-                    return GenerateMino(minoType, MinoColor.Orange);
+                    return GenerateMino(minoType, MinoColor.Orange, MinoColor.OrangeFaded);
                 case MinoType.FourminoJ:
-                    return GenerateMino(minoType, MinoColor.Blue);
+                    return GenerateMino(minoType, MinoColor.Blue, MinoColor.BlueFaded);
                 case MinoType.FourminoS:
-                    return GenerateMino(minoType, MinoColor.Red);
+                    return GenerateMino(minoType, MinoColor.Red, MinoColor.RedFaded);
                 case MinoType.FourminoZ:
-                    return GenerateMino(minoType, MinoColor.Green);
+                    return GenerateMino(minoType, MinoColor.Green, MinoColor.GreenFaded);
                 case MinoType.FourminoI:
-                    return GenerateMino(minoType, MinoColor.Teal);
+                    return GenerateMino(minoType, MinoColor.Teal, MinoColor.TealFaded);
                 case MinoType.FourminoT:
-                    return GenerateMino(minoType, MinoColor.Purple);
+                    return GenerateMino(minoType, MinoColor.Purple, MinoColor.PurpleFaded);
                 default:
                     throw new Exception($"{nameof(MinoFactory)} {nameof(GenerateBasicMino)} method does not support creation of {nameof(MinoType)} {minoType}.");
             }

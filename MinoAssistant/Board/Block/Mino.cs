@@ -1,104 +1,37 @@
 ﻿using MinoAssistant.Board.Motion.Rotation;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
-namespace MinoAssistant.Board.Block
+namespace MinoAssistant.Board.Block;
+
+public record struct Mino
 {
-    public class Mino
+    public int Size { get => RelativePositionsDefinition.Length; }
+    public required Position[] RelativePositionsDefinition { get; init; }
+    public required MinoColor MinoColor { get; init; }
+    public required MinoColor GhostMinoColor { get; init; }
+
+    [SetsRequiredMembers]
+    public Mino(IEnumerable<Position> relativePositions, MinoColor minoColor, MinoColor ghostMinoColor)
     {
-        public int Size { get => RelativePositions.Length; }
-        public Position[] OriginalPositions { get; }
-        public Position[] RelativePositions { get; private set; }
-        public MinoColor MinoColor { get; set; }
-        public RotationState RotationState { get; private set; }
+        RelativePositionsDefinition = relativePositions.ToArray();
+        MinoColor = minoColor;
+        GhostMinoColor = ghostMinoColor;
+    }
 
-        public Mino(Position[] positions, MinoColor minoColor)
+    public Position[] GetRelativePositions(RotationState rotationState)
+    {
+        switch (rotationState.Value)
         {
-            OriginalPositions = positions;
-            RelativePositions = positions;
-            MinoColor = minoColor;
-            RotationState = RotationState.R0;
-        }
-
-        public void Rotate(RotationDirection rotationDirection)
-        {
-            switch (rotationDirection)
-            {
-                case RotationDirection.None:
-                    break;
-                case RotationDirection.Clockwise:
-                    RotateClockwise();
-                    break;
-                case RotationDirection.CounterClockwise:
-                    RotateCounterClockwise();
-                    break;
-            }
-        }
-
-        public Position[] GetRotationPositions(RotationDirection rotationDirection)
-        {
-            Position[] rotatedPositions = (Position[])RelativePositions.Clone();
-
-            switch (rotationDirection)
-            {
-                case RotationDirection.None:
-                    break;
-                case RotationDirection.Clockwise:
-                    for (int i = 0; i < RelativePositions.Length; i++)
-                    {
-                        int currentX = RelativePositions[i].X;
-                        int currentY = RelativePositions[i].Y;
-                        rotatedPositions[i] = new Position(currentY, -1 * currentX);
-                    }
-                    break;
-                case RotationDirection.CounterClockwise:
-                    for (int i = 0; i < RelativePositions.Length; i++)
-                    {
-                        int currentX = RelativePositions[i].X;
-                        int currentY = RelativePositions[i].Y;
-                        rotatedPositions[i] = new Position(-1 * currentY, currentX);
-                    }
-                    break;
-            }
-            return rotatedPositions;
-        }
-
-        private void RotateClockwise()
-        {
-            RelativePositions = GetRotationPositions(RotationDirection.Clockwise);
-            switch (RotationState)
-            {
-                case RotationState.R0:
-                    RotationState = RotationState.R90;
-                    break;
-                case RotationState.R90:
-                    RotationState = RotationState.R180;
-                    break;
-                case RotationState.R180:
-                    RotationState = RotationState.R270;
-                    break;
-                case RotationState.R270:
-                    RotationState = RotationState.R0;
-                    break;
-            }
-        }
-
-        private void RotateCounterClockwise()
-        {
-            RelativePositions = GetRotationPositions(RotationDirection.CounterClockwise);
-            switch (RotationState)
-            {
-                case RotationState.R0:
-                    RotationState = RotationState.R270;
-                    break;
-                case RotationState.R90:
-                    RotationState = RotationState.R0;
-                    break;
-                case RotationState.R180:
-                    RotationState = RotationState.R90;
-                    break;
-                case RotationState.R270:
-                    RotationState = RotationState.R180;
-                    break;
-            }
+            case 0: return RelativePositionsDefinition;
+            case 90: return RelativePositionsDefinition.Select(p => new Position(p.Y, -p.X)).ToArray();
+            case 180: return RelativePositionsDefinition.Select(p => new Position(-p.X, -p.Y)).ToArray();
+            case 270: return RelativePositionsDefinition.Select(p => new Position(-p.Y, p.X)).ToArray();
+            default: throw new NotImplementedException();
         }
     }
+
+    public Position[] GetAbsolutePositions(RotationState rotationState, Position centerPosition) => GetRelativePositions(rotationState).Select(p => p + centerPosition).ToArray();
 }

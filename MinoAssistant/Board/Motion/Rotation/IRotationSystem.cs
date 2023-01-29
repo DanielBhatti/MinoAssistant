@@ -1,9 +1,8 @@
 ﻿using MinoAssistant.Board.Block;
 
-namespace MinoAssistant.Board.Motion.Rotation
+namespace MinoAssistant.Board.Motion.Rotation;
+
+public interface IRotationSystem
 {
-    public interface IRotationSystem
-    {
-        MotionResult Rotate(Field field, Mino mino, RotationDirection rotationDirection, Position centerPosition);
-    }
+    MotionContext Rotate(Field field, RotationContext rotationContext);
 }
