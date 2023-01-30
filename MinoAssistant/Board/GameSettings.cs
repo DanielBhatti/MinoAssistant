@@ -2,7 +2,7 @@
 
 namespace MinoAssistant.Board
 {
-    public struct GameSettings
+    public record struct GameSettings
     {
         public MinoColor UnfilledCellValue;
         public MinoColor GhostPieceValue;
@@ -15,8 +15,9 @@ namespace MinoAssistant.Board
         public double LockDelaySeconds;
         public int VisibleNextPieces;
         public bool IsShowingGhostPiece;
+        public bool IsEditMode;
 
-        public GameSettings(MinoColor unfilledCellValue, MinoColor ghostPieceValue, int fieldWidth = 10, int fieldHeight = 25, int originX = 5, int originY = 20, double gravity = 1000.0, double gravityIncrease = 0.0, double lockDelaySeconds = 0.3, int visibleNextPieces = 5, bool isShowingGhostPiece = true)
+        public GameSettings(MinoColor unfilledCellValue, MinoColor ghostPieceValue, int fieldWidth = 10, int fieldHeight = 25, int originX = 5, int originY = 20, double gravity = 1000.0, double gravityIncrease = 0.0, double lockDelaySeconds = 0.3, int visibleNextPieces = 5, bool isShowingGhostPiece = true, bool isEditMode = false)
         {
             UnfilledCellValue = unfilledCellValue;
             GhostPieceValue = ghostPieceValue;
@@ -29,6 +30,7 @@ namespace MinoAssistant.Board
             LockDelaySeconds = lockDelaySeconds;
             VisibleNextPieces = visibleNextPieces;
             IsShowingGhostPiece = isShowingGhostPiece;
+            IsEditMode = isEditMode;
         }
     }
 }

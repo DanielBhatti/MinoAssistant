@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace MinoAssistant.Board.Generator
 {
-    public class CustomGenerator : IGenerator
+    public class CustomGenerator : IMinoGenerator
     {
         public Mino NextPiece { get; set; } = MinoFactory.GenerateBasicMino(MinoType.FourminoT);
 

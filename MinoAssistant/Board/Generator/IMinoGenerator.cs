@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MinoAssistant.Board.Generator
 {
-    public interface IGenerator
+    public interface IMinoGenerator
     {
         List<Mino> Peek(int n);
 
