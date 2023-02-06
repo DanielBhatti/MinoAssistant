@@ -12,7 +12,7 @@ namespace MinoAssistant.Board
         private Cell[,] Cells { get; }
         public MinoColor UnfilledCellValue { get; }
 
-        public ReadOnlyCell this[int columnIndex, int rowIndex] { get => new ReadOnlyCell(Cells[columnIndex, rowIndex]); }
+        public Cell this[int columnIndex, int rowIndex] { get => Cells[columnIndex, rowIndex]; }
 
         public Field(int width, int height, MinoColor unfilledCellValue)
         {
@@ -25,7 +25,7 @@ namespace MinoAssistant.Board
         public bool Set(IEnumerable<Position> positions, MinoColor value)
         {
             if (!IsWithinBounds(positions)) return false;
-            foreach (Position p in positions) Cells[p.X, Height - p.Y - 1].Set(value);
+            foreach (Position p in positions) Cells[p.X, p.Y].Set(value);
             return true;
         }
 

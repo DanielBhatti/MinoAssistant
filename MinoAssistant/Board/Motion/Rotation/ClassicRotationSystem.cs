@@ -41,7 +41,7 @@ namespace MinoAssistant.Board.Motion.Rotation
                     throw new NotImplementedException();
             }
 
-            foreach (Position p in newPositions) if (field.IsFilled(p)) return new MotionContext(rotationContext.AbsolutePositions, MotionType.Fail, rotationContext.RotationState, rotationContext.CenterPosition);
+            foreach (Position p in newPositions) if (field.IsWithinBounds(p) && field.IsFilled(p)) return new MotionContext(rotationContext.AbsolutePositions, MotionType.Fail, rotationContext.RotationState, rotationContext.CenterPosition);
 
             return new MotionContext(rotationContext.AbsolutePositions, MotionType.Rotation, newRotationState, rotationContext.CenterPosition);
         }

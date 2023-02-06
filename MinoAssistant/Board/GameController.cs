@@ -86,10 +86,7 @@ public class GameController
         switch (moveDirection)
         {
             case MoveDirection.Up:
-                if (GameSettings.IsEditMode)
-                {
-                    displacement = (1, 0);
-                }
+                if (GameSettings.IsEditMode) displacement = (1, 0);
                 else return;
                 break;
             case MoveDirection.Down:
@@ -101,6 +98,8 @@ public class GameController
             case MoveDirection.Right:
                 displacement = (0, 1);
                 break;
+            case MoveDirection.None:
+                return;
             default: throw new NotImplementedException();
         }
         ToNextPosition(new MotionContext(CurrentMinoAbsolutePositions.Select(p => p + displacement), MotionType.Translation, CurrentMotionContext.RotationState, CurrentMotionContext.CenterPosition + displacement));
@@ -128,7 +127,7 @@ public class GameController
                 Position belowPosition = (columnIndex, rowIndex - 1);
                 if (Field.IsFilled(currentPosition))
                 {
-                    ReadOnlyCell cell = Field[currentPosition.X, currentPosition.Y];
+                    Cell cell = Field[currentPosition.X, currentPosition.Y];
                     MinoColor value = cell.Value;
                     Field.Set(currentPosition, Field.UnfilledCellValue);
                     Field.Set(belowPosition, value);
@@ -165,7 +164,7 @@ public class GameController
 
     private static Position GetLowestCenterPosition(Field field, IEnumerable<Position> relativePositions, Position centerPosition)
     {
-        while (!relativePositions.Select(p => p + centerPosition + (0, -1)).Any(field.IsFilled)) centerPosition += (0, -1);
+        while (relativePositions.Select(p => p + centerPosition + (0, -1)).Any(p => field.IsWithinBounds(p) && !field.IsFilled(p))) centerPosition += (0, -1);
         return centerPosition;
     }
 }

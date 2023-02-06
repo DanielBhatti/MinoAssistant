@@ -5,9 +5,9 @@ namespace MinoAssistant.UI
 {
     public class CellViewModel : ViewModelBase
     {
-        private ReadOnlyCell Cell { get; }
+        private Cell Cell { get; }
         public MinoColor Value { get => Cell.Value; }
 
-        public CellViewModel(ReadOnlyCell cell) => Cell = cell;
+        public CellViewModel(Cell cell) => Cell = cell;
     }
 }

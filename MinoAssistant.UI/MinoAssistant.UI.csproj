@@ -12,13 +12,20 @@
     <None Remove=".gitignore" />
     <None Remove="Assets\black-block.png" />
     <None Remove="Assets\blue-block.png" />
+    <None Remove="Assets\bluefaded-block.png" />
     <None Remove="Assets\green-block.png" />
+    <None Remove="Assets\greenfaded-block.png" />
     <None Remove="Assets\orange-block.png" />
+    <None Remove="Assets\orangefaded-block.png" />
     <None Remove="Assets\purple-block.png" />
+    <None Remove="Assets\purplefaded-block.png" />
     <None Remove="Assets\red-block.png" />
+    <None Remove="Assets\redfaded-block.png" />
     <None Remove="Assets\teal-block.png" />
+    <None Remove="Assets\tealfaded-block.png" />
     <None Remove="Assets\white-block.png" />
     <None Remove="Assets\yellow-block.png" />
+    <None Remove="Assets\yellowfaded-block.png" />
   </ItemGroup>
   <ItemGroup>
     <!--This helps with theme dll-s trimming.

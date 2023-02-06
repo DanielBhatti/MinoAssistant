@@ -13,14 +13,12 @@
         Teal,
         White,
         Yellow,
-        BlackFaded,
         BlueFaded,
         GreenFaded,
         OrangeFaded,
         PurpleFaded,
         RedFaded,
         TealFaded,
-        WhiteFaded,
         YellowFaded,
     }
 }

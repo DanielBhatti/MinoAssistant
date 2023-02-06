@@ -40,13 +40,12 @@ namespace MinoAssistant.Board.Block
             switch (minoType)
             {
                 case MinoType.Onemino:
-                    return GenerateMino(minoType, MinoColor.Black, MinoColor.BlackFaded);
                 case MinoType.Twomino:
-                    return GenerateMino(minoType, MinoColor.Black, MinoColor.BlackFaded);
+                    return GenerateMino(minoType, MinoColor.Black, MinoColor.Black);
                 case MinoType.ThreeminoI:
-                    return GenerateMino(minoType, MinoColor.Black, MinoColor.BlackFaded);
+                    return GenerateMino(minoType, MinoColor.Green, MinoColor.Orange);
                 case MinoType.ThreeminoL:
-                    return GenerateMino(minoType, MinoColor.Black, MinoColor.BlackFaded);
+                    return GenerateMino(minoType, MinoColor.Blue, MinoColor.Orange);
                 case MinoType.FourminoO:
                     return GenerateMino(minoType, MinoColor.Yellow, MinoColor.YellowFaded);
                 case MinoType.FourminoL:

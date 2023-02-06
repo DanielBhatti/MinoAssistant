@@ -21,9 +21,9 @@ namespace MinoAssistant.UI
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 GameSettings gameSettings = new GameSettings(Board.Block.MinoColor.White, Board.Block.MinoColor.Black);
-                IGenerator generator = new BpsGenerator();
+                IMinoGenerator generator = new BpsGenerator();
                 IRotationSystem rotationSystem = new ClassicRotationSystem();
-                Game game = new Game(gameSettings, generator, rotationSystem);
+                GameController game = new GameController(gameSettings, generator, rotationSystem);
 
                 desktop.MainWindow = new MainWindow
                 {

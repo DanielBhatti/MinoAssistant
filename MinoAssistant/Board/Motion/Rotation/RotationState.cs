@@ -16,6 +16,7 @@ namespace MinoAssistant.Board.Motion.Rotation
         public static RotationState operator +(RotationState r1, RotationState r2)
         {
             int result = ((int)r1.Value + (int)r2.Value) % 360;
+            while (result < 0) result += 360;
             switch (result)
             {
                 case 0: return RotationState.R0;

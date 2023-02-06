@@ -1,16 +1,16 @@
 ﻿using MinoAssistant.Board;
 using System.Threading;
-using System.Threading.Tasks;
 using ReactiveUI;
 using System.Collections.Generic;
 using MinoAssistant.Board.Block;
 using MinoAssistant.Board.Motion;
+using MinoAssistant.Board.Motion.Rotation;
 
 namespace MinoAssistant.UI
 {
     public class GameViewModel : ViewModelBase
     {
-        private Game Game { get; }
+        private GameController Game { get; }
         private Timer Timer { get; }
 
         public int Width { get => Game.Field.Width; }
@@ -22,7 +22,7 @@ namespace MinoAssistant.UI
         // Can't do that with a multi-array
         public List<List<CellViewModel>> CellViewModels { get; }
 
-        public GameViewModel(Game game)
+        public GameViewModel(GameController game)
         {
             Game = game;
             Timer = new Timer(TimerTick, null, 100, 100);
@@ -43,9 +43,9 @@ namespace MinoAssistant.UI
 
         public void MoveDownCommand() => Move(MoveDirection.Down);
 
-        public void RotateCounterClockwiseCommand() => Move(MoveDirection.CounterClockwiseRotation);
+        public void RotateCounterClockwiseCommand() => Rotate(RotationDirection.CounterClockwise);
 
-        public void RotateClockwiseCommand() => Move(MoveDirection.ClockwiseRotation);
+        public void RotateClockwiseCommand() => Rotate(RotationDirection.Clockwise);
 
         public void HoldCommand()
         {
@@ -65,17 +65,18 @@ namespace MinoAssistant.UI
             RaisePropertyChangedAllCells();
         }
 
+        private void Rotate(RotationDirection rotationDirection)
+        {
+            Game.Rotate(rotationDirection);
+            RaisePropertyChangedAllCells();
+        }
+
         private void TimerTick(object? sender)
         {
             RaisePropertyChangedAllCells();
         }
 
-        private void InitializeGame()
-        {
-            //for (int i = 0; i < Game.Field.Width; i++) for (int j = 0; j < Game.Field.Height; j++) CellViewModels[i][j].Cell.SetValue(@"C:\Users\bhatt\Repositories\MinoAssistant\MinoAssistant.UI\Assets\white-block.png");
-            RaisePropertyChangedAllCells();
-            //RaisePropertyChangedCells(Game.CurrentMinoAbsolutePositions);
-        }
+        private void InitializeGame() => RaisePropertyChangedAllCells();
 
         private void RaisePropertyChangedAllCells()
         {

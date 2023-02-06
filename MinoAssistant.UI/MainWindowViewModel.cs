@@ -6,8 +6,8 @@ namespace MinoAssistant.UI
     {
         public GameViewModel GameViewModel { get; }
 
-        public MainWindowViewModel() { }
-        public MainWindowViewModel(Game game)
+        public MainWindowViewModel() { } // get rid of this later, need to figure out dependency injection
+        public MainWindowViewModel(GameController game)
         {
             GameViewModel = new GameViewModel(game);
         }
