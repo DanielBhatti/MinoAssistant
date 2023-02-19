@@ -17,6 +17,9 @@
 			Grid.Column="1">
 			<TabItem>
 				<ListBox Items="{Binding FieldViewModel.Cells}">
+					<ListBox.RenderTransform>
+						<ScaleTransform ScaleX="-1"/>
+					</ListBox.RenderTransform>
 				</ListBox>
 			</TabItem>
 		</TabControl>

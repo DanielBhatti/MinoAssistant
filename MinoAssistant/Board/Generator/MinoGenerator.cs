@@ -6,7 +6,7 @@ using System.Linq;
 namespace MinoAssistant.Board.Generator;
 public class MinoGenerator : IMinoGenerator
 {
-    protected virtual IEnumerable<Mino> Minos { get; }
+    public virtual IEnumerable<Mino> Minos { get; }
     protected Queue<Mino> Queue { get; } = new();
 
     private Random Random { get; } = new();
@@ -17,9 +17,9 @@ public class MinoGenerator : IMinoGenerator
     public List<Mino> Peek(int n)
     {
         while (Queue.Count < n) AddToQueue();
-        List<Mino> minos = new();
-        for (int i = 0; i < n; i++) minos.Add(Queue.ElementAt(i));
-        return minos;
+        List<Mino> nextMinos = new();
+        for (int i = 0; i < n; i++) nextMinos.Add(Queue.ElementAt(i));
+        return nextMinos;
     }
 
     public Mino Pop()

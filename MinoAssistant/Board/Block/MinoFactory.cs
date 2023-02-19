@@ -23,11 +23,11 @@ namespace MinoAssistant.Board.Block
                 case MinoType.FourminoJ:
                     return new Mino(new Position[] { (-1, 1), (-1, 0), (0, 0), (1, 0) }, minoColor, ghostMinoColor);
                 case MinoType.FourminoS:
-                    return new Mino(new Position[] { (-1, -1), (0, -1), (0, 0), (1, 0) }, minoColor, ghostMinoColor);
+                    return new Mino(new Position[] { (-1, 0), (0, 0), (0, 1), (1, 1) }, minoColor, ghostMinoColor);
                 case MinoType.FourminoZ:
-                    return new Mino(new Position[] { (-1, 1), (0, 1), (0, 0), (0, -1) }, minoColor, ghostMinoColor);
+                    return new Mino(new Position[] { (-1, 1), (0, 1), (0, 0), (1, 0) }, minoColor, ghostMinoColor);
                 case MinoType.FourminoI:
-                    return new Mino(new Position[] { (-2, 0), (-1, 0), (0, 0), (1, 0) }, minoColor, ghostMinoColor);
+                    return new Mino(new Position[] { (-1, 0), (0, 0), (1, 0), (2, 0) }, minoColor, ghostMinoColor);
                 case MinoType.FourminoT:
                     return new Mino(new Position[] { (-1, 0), (0, 0), (1, 0), (0, 1) }, minoColor, ghostMinoColor);
                 default:

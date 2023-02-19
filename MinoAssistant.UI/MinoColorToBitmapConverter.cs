@@ -17,7 +17,7 @@ namespace MinoAssistant.UI
 
             MinoColor minoColor = (MinoColor)value;
 
-            return new Bitmap($@"C:\Users\bhatt\Repositories\MinoAssistant\MinoAssistant.UI\Assets\{minoColor.ToString().ToLower()}-block.png");
+            return new Bitmap($@"C:\Users\bhatt\repos\MinoAssistant\MinoAssistant.UI\Assets\{minoColor.ToString().ToLower()}-block.png");
         }
 
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

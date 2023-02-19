@@ -22,5 +22,7 @@ namespace MinoAssistant.Board
         public static Position operator -(Position left, Position right) => new Position(left.X - right.X, left.Y - right.Y);
 
         public static implicit operator Position((int, int) t) => new Position(t.Item1, t.Item2);
+
+        public override string ToString() => $"({X}, {Y})";
     }
 }
