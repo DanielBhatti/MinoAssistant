@@ -1,15 +1,10 @@
-using MinoAssistant.Board;
+using MinoAssistant.Game;
 
-namespace MinoAssistant.UI
+namespace MinoAssistant.UI;
+
+public class MainWindowViewModel : ViewModelBase
 {
-    public class MainWindowViewModel : ViewModelBase
-    {
-        public GameViewModel GameViewModel { get; }
+    public GameViewModel GameViewModel { get; }
 
-        public MainWindowViewModel() { } // get rid of this later, need to figure out dependency injection
-        public MainWindowViewModel(GameController game)
-        {
-            GameViewModel = new GameViewModel(game);
-        }
-    }
+    public MainWindowViewModel(GameSystem game) => GameViewModel = new GameViewModel(game);
 }

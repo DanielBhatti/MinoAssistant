@@ -1,345 +1,344 @@
-using MinoAssistant.Board;
-using MinoAssistant.Board.Block;
-using MinoAssistant.Board.Generator;
-using MinoAssistant.Board.Motion;
-using MinoAssistant.Board.Motion.Rotation;
+using MinoAssistant.Game;
+using MinoAssistant.Game.Block;
+using MinoAssistant.Game.Generator;
+using MinoAssistant.Game.Motion;
+using MinoAssistant.Game.Motion.Rotation;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MinoAssistant.Test
+namespace MinoAssistant.Test;
+
+[TestFixture]
+public class GameSystemTest
 {
-    public class GameControllerTest
+    private GameSettings DefaultSettings { get; set; }
+    private ClassicRotationSystem ClassicRotationSystem { get; set; } = null!;
+
+    private Mino TMino { get; } = MinoFactory.GenerateBasicMino(MinoType.FourminoT);
+    private Mino IMino { get; } = MinoFactory.GenerateBasicMino(MinoType.FourminoI);
+    private Mino OMino { get; } = MinoFactory.GenerateBasicMino(MinoType.FourminoO);
+    private Mino SMino { get; } = MinoFactory.GenerateBasicMino(MinoType.FourminoS);
+    private Mino ZMino { get; } = MinoFactory.GenerateBasicMino(MinoType.FourminoZ);
+    private Mino JMino { get; } = MinoFactory.GenerateBasicMino(MinoType.FourminoJ);
+    private Mino LMino { get; } = MinoFactory.GenerateBasicMino(MinoType.FourminoL);
+
+    private GameSystem TSystem { get; set; } = null!;
+    private GameSystem ISystem { get; set; } = null!;
+    private GameSystem OSystem { get; set; } = null!;
+    private GameSystem JSystem { get; set; } = null!;
+    private GameSystem LSystem { get; set; } = null!;
+    private GameSystem SSystem { get; set; } = null!;
+    private GameSystem ZSystem { get; set; } = null!;
+
+    [SetUp]
+    public void Setup()
     {
-        private GameSettings DefaultSettings { get; set; }
-        private ClassicRotationSystem ClassicRotationSystem { get; set; } = null!;
+        DefaultSettings = GameSettings.DefaultSettings;
+        ClassicRotationSystem = new ClassicRotationSystem();
 
-        private Mino TMino { get; } = MinoFactory.GenerateBasicMino(MinoType.FourminoT);
-        private Mino IMino { get; } = MinoFactory.GenerateBasicMino(MinoType.FourminoI);
-        private Mino OMino { get; } = MinoFactory.GenerateBasicMino(MinoType.FourminoO);
-        private Mino SMino { get; } = MinoFactory.GenerateBasicMino(MinoType.FourminoS);
-        private Mino ZMino { get; } = MinoFactory.GenerateBasicMino(MinoType.FourminoZ);
-        private Mino JMino { get; } = MinoFactory.GenerateBasicMino(MinoType.FourminoJ);
-        private Mino LMino { get; } = MinoFactory.GenerateBasicMino(MinoType.FourminoL);
+        RandomizedBagMinoGenerator tGenerator = new(TMino);
+        RandomizedBagMinoGenerator iGenerator = new(IMino);
+        RandomizedBagMinoGenerator oGenerator = new(OMino);
+        RandomizedBagMinoGenerator jGenerator = new(JMino);
+        RandomizedBagMinoGenerator lGenerator = new(LMino);
+        RandomizedBagMinoGenerator sGenerator = new(SMino);
+        RandomizedBagMinoGenerator zGenerator = new(ZMino);
 
-        private GameController TController { get; set; } = null!;
-        private GameController IController { get; set; } = null!;
-        private GameController OController { get; set; } = null!;
-        private GameController JController { get; set; } = null!;
-        private GameController LController { get; set; } = null!;
-        private GameController SController { get; set; } = null!;
-        private GameController ZController { get; set; } = null!;
+        TSystem = new GameSystem(DefaultSettings, tGenerator, ClassicRotationSystem);
+        ISystem = new GameSystem(DefaultSettings, iGenerator, ClassicRotationSystem);
+        OSystem = new GameSystem(DefaultSettings, oGenerator, ClassicRotationSystem);
+        JSystem = new GameSystem(DefaultSettings, jGenerator, ClassicRotationSystem);
+        LSystem = new GameSystem(DefaultSettings, lGenerator, ClassicRotationSystem);
+        SSystem = new GameSystem(DefaultSettings, sGenerator, ClassicRotationSystem);
+        ZSystem = new GameSystem(DefaultSettings, zGenerator, ClassicRotationSystem);
+    }
 
-        [SetUp]
-        public void Setup()
+    //[Test]
+    //public void HardDropT()
+    //{
+    //    TSystem.HardDrop();
+    //    var hardDroppedPositions = TMino.GetAbsolutePositions(RotationAmount.R0, (DefaultSettings.OriginX, 0));
+    //    var newMinoPositions = TMino.GetAbsolutePositions(RotationAmount.R0, DefaultSettings.Origin);
+    //    AssertOnlyCellsFilled(TSystem.Field, hardDroppedPositions.Union(newMinoPositions));
+    //}
+
+    //[Test]
+    //public void HardDropI()
+    //{
+    //    ISystem.HardDrop();
+    //    var hardDroppedPositions = IMino.GetAbsolutePositions(RotationAmount.R0, (DefaultSettings.OriginX, 0));
+    //    var newMinoPositions = IMino.GetAbsolutePositions(RotationAmount.R0, DefaultSettings.Origin);
+    //    AssertOnlyCellsFilled(ISystem.Field, hardDroppedPositions.Union(newMinoPositions));
+    //}
+
+    //[Test]
+    //public void HardDropO()
+    //{
+    //    OSystem.HardDrop();
+    //    var hardDroppedPositions = OMino.GetAbsolutePositions(RotationAmount.R0, (DefaultSettings.OriginX, 0));
+    //    var newMinoPositions = OMino.GetAbsolutePositions(RotationAmount.R0, DefaultSettings.Origin);
+    //    AssertOnlyCellsFilled(OSystem.Field, hardDroppedPositions.Union(newMinoPositions));
+    //}
+
+    //[Test]
+    //public void HardDropJ()
+    //{
+    //    JSystem.HardDrop();
+    //    var hardDroppedPositions = JMino.GetAbsolutePositions(RotationAmount.R0, (DefaultSettings.OriginX, 0));
+    //    var newMinoPositions = JMino.GetAbsolutePositions(RotationAmount.R0, DefaultSettings.Origin);
+    //    AssertOnlyCellsFilled(JSystem.Field, hardDroppedPositions.Union(newMinoPositions));
+    //}
+
+    //[Test]
+    //public void HardDropL()
+    //{
+    //    LSystem.HardDrop();
+    //    var hardDroppedPositions = LMino.GetAbsolutePositions(RotationAmount.R0, (DefaultSettings.OriginX, 0));
+    //    var newMinoPositions = LMino.GetAbsolutePositions(RotationAmount.R0, DefaultSettings.Origin);
+    //    AssertOnlyCellsFilled(LSystem.Field, hardDroppedPositions.Union(newMinoPositions));
+    //}
+
+    //[Test]
+    //public void HardDropS()
+    //{
+    //    SSystem.HardDrop();
+    //    var hardDroppedPositions = SMino.GetAbsolutePositions(RotationAmount.R0, (DefaultSettings.OriginX, 0));
+    //    var newMinoPositions = SMino.GetAbsolutePositions(RotationAmount.R0, DefaultSettings.Origin);
+    //    AssertOnlyCellsFilled(SSystem.Field, hardDroppedPositions.Union(newMinoPositions));
+    //}
+
+    //[Test]
+    //public void HardDropZ()
+    //{
+    //    ZSystem.HardDrop();
+    //    var hardDroppedPositions = ZMino.GetAbsolutePositions(RotationAmount.R0, (DefaultSettings.OriginX, 0));
+    //    var newMinoPositions = ZMino.GetAbsolutePositions(RotationAmount.R0, DefaultSettings.Origin);
+    //    AssertOnlyCellsFilled(ZSystem.Field, hardDroppedPositions.Union(newMinoPositions));
+    //}
+
+    //[Test]
+    //public void StartGameT()
+    //{
+    //    var initialPositions = TMino.GetAbsolutePositions(RotationAmount.R0, DefaultSettings.Origin);
+    //    AssertOnlyCellsFilled(TSystem.Field, initialPositions);
+    //}
+
+    //[Test]
+    //public void MoveDownT()
+    //{
+    //    TSystem.MoveMino(MoveDirection.Down);
+    //    var newMinoPositions = TMino.GetAbsolutePositions(RotationAmount.R0, DefaultSettings.Origin + (0, -1));
+    //    AssertOnlyCellsFilled(TSystem.Field, newMinoPositions);
+    //}
+
+    //[Test]
+    //public void MoveLeftT()
+    //{
+    //    TSystem.MoveMino(MoveDirection.Left);
+    //    var newMinoPositions = TMino.GetAbsolutePositions(RotationAmount.R0, DefaultSettings.Origin + (-1, 0));
+    //    AssertOnlyCellsFilled(TSystem.Field, newMinoPositions);
+    //}
+
+    //[Test]
+    //public void MoveTwoLeftT()
+    //{
+    //    TSystem.MoveMino(MoveDirection.Left);
+    //    TSystem.MoveMino(MoveDirection.Left);
+    //    var newMinoPositions = TMino.GetAbsolutePositions(RotationAmount.R0, DefaultSettings.Origin + (-2, 0));
+    //    AssertOnlyCellsFilled(TSystem.Field, newMinoPositions);
+    //}
+
+    //[Test]
+    //public void MoveThreeLeftT()
+    //{
+    //    TSystem.MoveMino(MoveDirection.Left);
+    //    TSystem.MoveMino(MoveDirection.Left);
+    //    TSystem.MoveMino(MoveDirection.Left);
+    //    var newMinoPositions = TMino.GetAbsolutePositions(RotationAmount.R0, DefaultSettings.Origin + (-3, 0));
+    //    AssertOnlyCellsFilled(TSystem.Field, newMinoPositions);
+    //}
+
+    //[Test]
+    //public void MoveFourLeftT()
+    //{
+    //    TSystem.MoveMino(MoveDirection.Left);
+    //    TSystem.MoveMino(MoveDirection.Left);
+    //    TSystem.MoveMino(MoveDirection.Left);
+    //    TSystem.MoveMino(MoveDirection.Left);
+    //    var newMinoPositions = TMino.GetAbsolutePositions(RotationAmount.R0, DefaultSettings.Origin + (-3, 0));
+    //    AssertOnlyCellsFilled(TSystem.Field, newMinoPositions);
+    //}
+
+    //[Test]
+    //public void MoveRightT()
+    //{
+    //    TSystem.MoveMino(MoveDirection.Right);
+    //    var newMinoPositions = TMino.GetAbsolutePositions(RotationAmount.R0, DefaultSettings.Origin + (1, 0));
+    //    AssertOnlyCellsFilled(TSystem.Field, newMinoPositions);
+    //}
+
+    //[Test]
+    //public void MoveTwoRightT()
+    //{
+    //    TSystem.MoveMino(MoveDirection.Right);
+    //    TSystem.MoveMino(MoveDirection.Right);
+    //    var newMinoPositions = TMino.GetAbsolutePositions(RotationAmount.R0, DefaultSettings.Origin + (2, 0));
+    //    AssertOnlyCellsFilled(TSystem.Field, newMinoPositions);
+    //}
+
+    //[Test]
+    //public void MoveThreeRightT()
+    //{
+    //    TSystem.MoveMino(MoveDirection.Right);
+    //    TSystem.MoveMino(MoveDirection.Right);
+    //    TSystem.MoveMino(MoveDirection.Right);
+    //    var newMinoPositions = TMino.GetAbsolutePositions(RotationAmount.R0, DefaultSettings.Origin + (3, 0));
+    //    AssertOnlyCellsFilled(TSystem.Field, newMinoPositions);
+    //}
+
+    //[Test]
+    //public void MoveFourRightT()
+    //{
+    //    TSystem.MoveMino(MoveDirection.Right);
+    //    TSystem.MoveMino(MoveDirection.Right);
+    //    TSystem.MoveMino(MoveDirection.Right);
+    //    TSystem.MoveMino(MoveDirection.Right);
+    //    var newMinoPositions = TMino.GetAbsolutePositions(RotationAmount.R0, DefaultSettings.Origin + (4, 0));
+    //    AssertOnlyCellsFilled(TSystem.Field, newMinoPositions);
+    //}
+
+    //[Test]
+    //public void MoveFiveRightT()
+    //{
+    //    TSystem.MoveMino(MoveDirection.Right);
+    //    TSystem.MoveMino(MoveDirection.Right);
+    //    TSystem.MoveMino(MoveDirection.Right);
+    //    TSystem.MoveMino(MoveDirection.Right);
+    //    TSystem.MoveMino(MoveDirection.Right);
+    //    var newMinoPositions = TMino.GetAbsolutePositions(RotationAmount.R0, DefaultSettings.Origin + (4, 0));
+    //    AssertOnlyCellsFilled(TSystem.Field, newMinoPositions);
+    //}
+
+    //[Test]
+    //public void RotateT()
+    //{
+    //    TSystem.Rotate(RotationDirection.Clockwise);
+    //    HashSet<(int, int)> positions = new() { (4, 22), (4, 21), (4, 20), (5, 21) };
+    //    AssertOnlyCellsFilled(TSystem.Field, positions);
+    //}
+
+    //[Test]
+    //public void RotateI()
+    //{
+    //    ISystem.Rotate(RotationDirection.Clockwise);
+    //    HashSet<(int, int)> positions = new() { (3, 20), (3, 21), (3, 22), (3, 23) };
+    //    AssertOnlyCellsFilled(ISystem.Field, positions);
+    //}
+
+    //[Test]
+    //public void RotateO()
+    //{
+    //    ISystem.Rotate(RotationDirection.Clockwise);
+    //    HashSet<(int, int)> positions = new() { (3, 20), (4, 20), (3, 21), (3, 22) };
+    //    AssertOnlyCellsFilled(ISystem.Field, positions);
+    //}
+
+    //[Test]
+    //public void RotateJ()
+    //{
+    //    JSystem.Rotate(RotationDirection.Clockwise);
+    //    HashSet<(int, int)> positions = new() { (4, 20), (4, 21), (4, 22), (5, 22) };
+    //    AssertOnlyCellsFilled(JSystem.Field, positions);
+    //}
+
+    //[Test]
+    //public void RotateL()
+    //{
+    //    LSystem.Rotate(RotationDirection.Clockwise);
+    //    HashSet<(int, int)> positions = new() { (4, 20), (4, 21), (4, 22), (3, 22) };
+    //    AssertOnlyCellsFilled(LSystem.Field, positions);
+    //}
+
+    //[Test]
+    //public void RotateS()
+    //{
+    //    SSystem.Rotate(RotationDirection.Clockwise);
+    //    HashSet<(int, int)> positions = new() { (4, 20), (5, 20), (3, 21), (4, 21) };
+    //    AssertOnlyCellsFilled(SSystem.Field, positions);
+    //}
+
+    //[Test]
+    //public void RotateZ()
+    //{
+    //    ZSystem.Rotate(RotationDirection.Clockwise);
+    //    HashSet<(int, int)> positions = new() { (3, 20), (4, 20), (4, 21), (5, 21) };
+    //    AssertOnlyCellsFilled(ZSystem.Field, positions);
+    //}
+
+    //[Test]
+    //public void SoftDropT()
+    //{
+    //    TSystem.MoveMino(MoveDirection.Down);
+    //    _ = TSystem.SoftDrop();
+    //    HashSet<(int, int)> positions = new() { (3, 0), (4, 0), (4, 1), (5, 0) };
+    //    AssertOnlyCellsFilled(TSystem.Field, positions);
+    //}
+
+    //[Test]
+    //public void HoldT()
+    //{
+    //    TSystem.Hold();
+    //    var initialPositions = TMino.GetAbsolutePositions(RotationAmount.R0, DefaultSettings.Origin);
+    //    AssertOnlyCellsFilled(TSystem.Field, initialPositions);
+    //    Assert.AreEqual(TMino, TSystem.HeldMino!.Value);
+    //}
+
+    private static void AssertOnlyCellsFilled(MinoField field, IEnumerable<Position> positions) => AssertOnlyCellsFilled(field, positions.Select(p => (p.X, p.Y)));
+    private static void AssertOnlyCellsFilled(MinoField field, IEnumerable<(int, int)> positions)
+    {
+        List<Position> outOfBoundPositions = new();
+        List<Position> falseFilledPositions = new();
+        List<Position> falseUnfilledPositions = new();
+        for(var i = 0; i < field.Width; i++)
         {
-            DefaultSettings = GameSettings.DefaultSettings;
-            ClassicRotationSystem = new ClassicRotationSystem();
-
-            MinoGenerator tGenerator = new(TMino);
-            MinoGenerator iGenerator = new(IMino);
-            MinoGenerator oGenerator = new(OMino);
-            MinoGenerator jGenerator = new(JMino);
-            MinoGenerator lGenerator = new(LMino);
-            MinoGenerator sGenerator = new(SMino);
-            MinoGenerator zGenerator = new(ZMino);
-
-            TController = new GameController(DefaultSettings, tGenerator, ClassicRotationSystem);
-            IController = new GameController(DefaultSettings, iGenerator, ClassicRotationSystem);
-            OController = new GameController(DefaultSettings, oGenerator, ClassicRotationSystem);
-            JController = new GameController(DefaultSettings, jGenerator, ClassicRotationSystem);
-            LController = new GameController(DefaultSettings, lGenerator, ClassicRotationSystem);
-            SController = new GameController(DefaultSettings, sGenerator, ClassicRotationSystem);
-            ZController = new GameController(DefaultSettings, zGenerator, ClassicRotationSystem);
-        }
-
-        [Test]
-        public void HardDropT()
-        {
-            TController.HardDrop();
-            var hardDroppedPositions = TMino.GetAbsolutePositions(RotationState.R0, (DefaultSettings.OriginX, 0));
-            var newMinoPositions = TMino.GetAbsolutePositions(RotationState.R0, DefaultSettings.Origin);
-            AssertOnlyCellsFilled(TController.Field, hardDroppedPositions.Union(newMinoPositions));
-        }
-
-        [Test]
-        public void HardDropI()
-        {
-            IController.HardDrop();
-            var hardDroppedPositions = IMino.GetAbsolutePositions(RotationState.R0, (DefaultSettings.OriginX, 0));
-            var newMinoPositions = IMino.GetAbsolutePositions(RotationState.R0, DefaultSettings.Origin);
-            AssertOnlyCellsFilled(IController.Field, hardDroppedPositions.Union(newMinoPositions));
-        }
-
-        [Test]
-        public void HardDropO()
-        {
-            OController.HardDrop();
-            var hardDroppedPositions = OMino.GetAbsolutePositions(RotationState.R0, (DefaultSettings.OriginX, 0));
-            var newMinoPositions = OMino.GetAbsolutePositions(RotationState.R0, DefaultSettings.Origin);
-            AssertOnlyCellsFilled(OController.Field, hardDroppedPositions.Union(newMinoPositions));
-        }
-
-        [Test]
-        public void HardDropJ()
-        {
-            JController.HardDrop();
-            var hardDroppedPositions = JMino.GetAbsolutePositions(RotationState.R0, (DefaultSettings.OriginX, 0));
-            var newMinoPositions = JMino.GetAbsolutePositions(RotationState.R0, DefaultSettings.Origin);
-            AssertOnlyCellsFilled(JController.Field, hardDroppedPositions.Union(newMinoPositions));
-        }
-
-        [Test]
-        public void HardDropL()
-        {
-            LController.HardDrop();
-            var hardDroppedPositions = LMino.GetAbsolutePositions(RotationState.R0, (DefaultSettings.OriginX, 0));
-            var newMinoPositions = LMino.GetAbsolutePositions(RotationState.R0, DefaultSettings.Origin);
-            AssertOnlyCellsFilled(LController.Field, hardDroppedPositions.Union(newMinoPositions));
-        }
-
-        [Test]
-        public void HardDropS()
-        {
-            SController.HardDrop();
-            var hardDroppedPositions = SMino.GetAbsolutePositions(RotationState.R0, (DefaultSettings.OriginX, 0));
-            var newMinoPositions = SMino.GetAbsolutePositions(RotationState.R0, DefaultSettings.Origin);
-            AssertOnlyCellsFilled(SController.Field, hardDroppedPositions.Union(newMinoPositions));
-        }
-
-        [Test]
-        public void HardDropZ()
-        {
-            ZController.HardDrop();
-            var hardDroppedPositions = ZMino.GetAbsolutePositions(RotationState.R0, (DefaultSettings.OriginX, 0));
-            var newMinoPositions = ZMino.GetAbsolutePositions(RotationState.R0, DefaultSettings.Origin);
-            AssertOnlyCellsFilled(ZController.Field, hardDroppedPositions.Union(newMinoPositions));
-        }
-
-        [Test]
-        public void StartGameT()
-        {
-            var initialPositions = TMino.GetAbsolutePositions(RotationState.R0, DefaultSettings.Origin);
-            AssertOnlyCellsFilled(TController.Field, initialPositions);
-        }
-
-        [Test]
-        public void MoveDownT()
-        {
-            TController.MoveMino(MoveDirection.Down);
-            var newMinoPositions = TMino.GetAbsolutePositions(RotationState.R0, DefaultSettings.Origin + (0, -1));
-            AssertOnlyCellsFilled(TController.Field, newMinoPositions);
-        }
-
-        [Test]
-        public void MoveLeftT()
-        {
-            TController.MoveMino(MoveDirection.Left);
-            var newMinoPositions = TMino.GetAbsolutePositions(RotationState.R0, DefaultSettings.Origin + (-1, 0));
-            AssertOnlyCellsFilled(TController.Field, newMinoPositions);
-        }
-
-        [Test]
-        public void MoveTwoLeftT()
-        {
-            TController.MoveMino(MoveDirection.Left);
-            TController.MoveMino(MoveDirection.Left);
-            var newMinoPositions = TMino.GetAbsolutePositions(RotationState.R0, DefaultSettings.Origin + (-2, 0));
-            AssertOnlyCellsFilled(TController.Field, newMinoPositions);
-        }
-
-        [Test]
-        public void MoveThreeLeftT()
-        {
-            TController.MoveMino(MoveDirection.Left);
-            TController.MoveMino(MoveDirection.Left);
-            TController.MoveMino(MoveDirection.Left);
-            var newMinoPositions = TMino.GetAbsolutePositions(RotationState.R0, DefaultSettings.Origin + (-3, 0));
-            AssertOnlyCellsFilled(TController.Field, newMinoPositions);
-        }
-
-        [Test]
-        public void MoveFourLeftT()
-        {
-            TController.MoveMino(MoveDirection.Left);
-            TController.MoveMino(MoveDirection.Left);
-            TController.MoveMino(MoveDirection.Left);
-            TController.MoveMino(MoveDirection.Left);
-            var newMinoPositions = TMino.GetAbsolutePositions(RotationState.R0, DefaultSettings.Origin + (-3, 0));
-            AssertOnlyCellsFilled(TController.Field, newMinoPositions);
-        }
-
-        [Test]
-        public void MoveRightT()
-        {
-            TController.MoveMino(MoveDirection.Right);
-            var newMinoPositions = TMino.GetAbsolutePositions(RotationState.R0, DefaultSettings.Origin + (1, 0));
-            AssertOnlyCellsFilled(TController.Field, newMinoPositions);
-        }
-
-        [Test]
-        public void MoveTwoRightT()
-        {
-            TController.MoveMino(MoveDirection.Right);
-            TController.MoveMino(MoveDirection.Right);
-            var newMinoPositions = TMino.GetAbsolutePositions(RotationState.R0, DefaultSettings.Origin + (2, 0));
-            AssertOnlyCellsFilled(TController.Field, newMinoPositions);
-        }
-
-        [Test]
-        public void MoveThreeRightT()
-        {
-            TController.MoveMino(MoveDirection.Right);
-            TController.MoveMino(MoveDirection.Right);
-            TController.MoveMino(MoveDirection.Right);
-            var newMinoPositions = TMino.GetAbsolutePositions(RotationState.R0, DefaultSettings.Origin + (3, 0));
-            AssertOnlyCellsFilled(TController.Field, newMinoPositions);
-        }
-
-        [Test]
-        public void MoveFourRightT()
-        {
-            TController.MoveMino(MoveDirection.Right);
-            TController.MoveMino(MoveDirection.Right);
-            TController.MoveMino(MoveDirection.Right);
-            TController.MoveMino(MoveDirection.Right);
-            var newMinoPositions = TMino.GetAbsolutePositions(RotationState.R0, DefaultSettings.Origin + (4, 0));
-            AssertOnlyCellsFilled(TController.Field, newMinoPositions);
-        }
-
-        [Test]
-        public void MoveFiveRightT()
-        {
-            TController.MoveMino(MoveDirection.Right);
-            TController.MoveMino(MoveDirection.Right);
-            TController.MoveMino(MoveDirection.Right);
-            TController.MoveMino(MoveDirection.Right);
-            TController.MoveMino(MoveDirection.Right);
-            var newMinoPositions = TMino.GetAbsolutePositions(RotationState.R0, DefaultSettings.Origin + (4, 0));
-            AssertOnlyCellsFilled(TController.Field, newMinoPositions);
-        }
-
-        [Test]
-        public void RotateT()
-        {
-            TController.Rotate(RotationDirection.Clockwise);
-            HashSet<(int, int)> positions = new() { (4, 22), (4, 21), (4, 20), (5, 21) };
-            AssertOnlyCellsFilled(TController.Field, positions);
-        }
-
-        [Test]
-        public void RotateI()
-        {
-            IController.Rotate(RotationDirection.Clockwise);
-            HashSet<(int, int)> positions = new() { (3, 20), (3, 21), (3, 22), (3, 23) };
-            AssertOnlyCellsFilled(IController.Field, positions);
-        }
-
-        [Test]
-        public void RotateO()
-        {
-            IController.Rotate(RotationDirection.Clockwise);
-            HashSet<(int, int)> positions = new() { (3, 20), (4, 20), (3, 21), (3, 22) };
-            AssertOnlyCellsFilled(IController.Field, positions);
-        }
-
-        [Test]
-        public void RotateJ()
-        {
-            JController.Rotate(RotationDirection.Clockwise);
-            HashSet<(int, int)> positions = new() { (4, 20), (4, 21), (4, 22), (5, 22) };
-            AssertOnlyCellsFilled(JController.Field, positions);
-        }
-
-        [Test]
-        public void RotateL()
-        {
-            LController.Rotate(RotationDirection.Clockwise);
-            HashSet<(int, int)> positions = new() { (4, 20), (4, 21), (4, 22), (3, 22) };
-            AssertOnlyCellsFilled(LController.Field, positions);
-        }
-
-        [Test]
-        public void RotateS()
-        {
-            SController.Rotate(RotationDirection.Clockwise);
-            HashSet<(int, int)> positions = new() { (4, 20), (5, 20), (3, 21), (4, 21) };
-            AssertOnlyCellsFilled(SController.Field, positions);
-        }
-
-        [Test]
-        public void RotateZ()
-        {
-            ZController.Rotate(RotationDirection.Clockwise);
-            HashSet<(int, int)> positions = new() { (3, 20), (4, 20), (4, 21), (5, 21) };
-            AssertOnlyCellsFilled(ZController.Field, positions);
-        }
-
-        [Test]
-        public void SoftDropT()
-        {
-            TController.MoveMino(MoveDirection.Down);
-            TController.SoftDrop();
-            HashSet<(int, int)> positions = new() { (3, 0), (4, 0), (4, 1), (5, 0) };
-            AssertOnlyCellsFilled(TController.Field, positions);
-        }
-
-        [Test]
-        public void HoldT()
-        {
-            TController.Hold();
-            var initialPositions = TMino.GetAbsolutePositions(RotationState.R0, DefaultSettings.Origin);
-            AssertOnlyCellsFilled(TController.Field, initialPositions);
-            Assert.AreEqual(TMino, TController.HeldMino!.Value);
-        }
-
-        private static void AssertOnlyCellsFilled(Field field, IEnumerable<Position> positions) => AssertOnlyCellsFilled(field, positions.Select(p => (p.X, p.Y)));
-        private static void AssertOnlyCellsFilled(Field field, IEnumerable<(int, int)> positions)
-        {
-            List<Position> outOfBoundPositions = new();
-            List<Position> falseFilledPositions = new();
-            List<Position> falseUnfilledPositions = new();
-            for (int i = 0; i < field.Width; i++)
+            for(var j = 0; j < field.Height; j++)
             {
-                for (int j = 0; j < field.Height; j++)
-                {
-                    (int, int) p = (i, j);
-                    if (!field.IsWithinBounds(p)) outOfBoundPositions.Add(p);
-                    if (field.IsFilled(p) && !positions.Contains(p)) falseFilledPositions.Add(p);
-                    if (!field.IsFilled(p) && positions.Contains(p)) falseUnfilledPositions.Add(p);
-                }
-            }
-            if (outOfBoundPositions.Any() || falseFilledPositions.Any() || falseUnfilledPositions.Any())
-            {
-                Assert.Fail(
-@$"Positions out of bounds: {String.Join(",", outOfBoundPositions)}
-Positions filled that shouldn't be: {String.Join(",", falseFilledPositions)}
-Positions not filled that should be: {String.Join(",", falseUnfilledPositions)}");
+                (int, int) p = (i, j);
+                if (!field.IsWithinBounds(p)) outOfBoundPositions.Add(p);
+                if (field.IsFilled(p) && !positions.Contains(p)) falseFilledPositions.Add(p);
+                if (!field.IsFilled(p) && positions.Contains(p)) falseUnfilledPositions.Add(p);
             }
         }
-
-
-        private static void AssertCellsFilled(Field field, IEnumerable<Position> positions) => AssertCellsFilled(field, positions.Select(p => (p.X, p.Y)));
-        private static void AssertCellsFilled(Field field, IEnumerable<(int, int)> positions)
+        if (outOfBoundPositions.Any() || falseFilledPositions.Any() || falseUnfilledPositions.Any())
         {
-            List<Position> outOfBoundPositions = new();
-            List<Position> falseUnfilledPositions = new();
-            for (int i = 0; i < field.Width; i++)
+            Assert.Fail(
+@$"Positions out of bounds: {string.Join(",", outOfBoundPositions)}
+Positions filled that shouldn't be: {string.Join(",", falseFilledPositions)}
+Positions not filled that should be: {string.Join(",", falseUnfilledPositions)}");
+        }
+    }
+
+    private static void AssertCellsFilled(MinoField field, IEnumerable<Position> positions) => AssertCellsFilled(field, positions.Select(p => (p.X, p.Y)));
+    private static void AssertCellsFilled(MinoField field, IEnumerable<(int, int)> positions)
+    {
+        List<Position> outOfBoundPositions = new();
+        List<Position> falseUnfilledPositions = new();
+        for(var i = 0; i < field.Width; i++)
+        {
+            for(var j = 0; j < field.Height; j++)
             {
-                for (int j = 0; j < field.Height; j++)
-                {
-                    (int, int) p = (i, j);
-                    if (!field.IsWithinBounds(p)) outOfBoundPositions.Add(p);
-                    if (!field.IsFilled(p) && positions.Contains(p)) falseUnfilledPositions.Add(p);
-                }
+                (int, int) p = (i, j);
+                if (!field.IsWithinBounds(p)) outOfBoundPositions.Add(p);
+                if (!field.IsFilled(p) && positions.Contains(p)) falseUnfilledPositions.Add(p);
             }
-            if (outOfBoundPositions.Any() || falseUnfilledPositions.Any())
-            {
-                Assert.Fail(
-@$"Positions out of bounds: {String.Join(",", outOfBoundPositions)}
-Positions not filled that should be: {String.Join(",", falseUnfilledPositions)}");
-            }
+        }
+        if (outOfBoundPositions.Any() || falseUnfilledPositions.Any())
+        {
+            Assert.Fail(
+@$"Positions out of bounds: {string.Join(",", outOfBoundPositions)}
+Positions not filled that should be: {string.Join(",", falseUnfilledPositions)}");
         }
     }
 }

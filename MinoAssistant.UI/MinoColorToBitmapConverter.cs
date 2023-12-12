@@ -1,28 +1,25 @@
 ﻿using Avalonia.Data.Converters;
+using Avalonia.Media.Imaging;
+using MinoAssistant.Game.Block;
 using System;
 using System.Globalization;
 using System.IO;
-using Avalonia.Media.Imaging;
-using MinoAssistant.Board;
-using MinoAssistant.Board.Block;
 
-namespace MinoAssistant.UI
+namespace MinoAssistant.UI;
+
+internal class MinoColorToBitmapConverter : IValueConverter
 {
-    internal class MinoColorToBitmapConverter : IValueConverter
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-        {
-            if (value == null) return null;
-            if (value.GetType() != typeof(MinoColor)) throw new ArgumentException($"Argument must be of type {nameof(MinoColor)}.");
+        if(value == null) return null;
+        if(value.GetType() != typeof(MinoColor)) throw new ArgumentException($"Argument must be of type {nameof(MinoColor)}.");
 
-            MinoColor minoColor = (MinoColor)value;
+        var minoColor = (MinoColor)value;
 
-            return new Bitmap($@"C:\Users\bhatt\repos\MinoAssistant\MinoAssistant.UI\Assets\{minoColor.ToString().ToLower()}-block.png");
-        }
-
-        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        string filePath = $@"C:\Users\bhatt\repos\MinoAssistant\MinoAssistant.UI\Assets\{minoColor.ToString().ToLower()}-block.png";
+        if(File.Exists(filePath)) return new Bitmap(filePath);
+        else return new Bitmap($@"C:\Users\bhatt\repos\MinoAssistant\MinoAssistant.UI\Assets\{MinoColor.Black.ToString().ToLower()}-block.png");
     }
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => throw new NotImplementedException();
 }

@@ -1,12 +1,8 @@
 using Avalonia.Controls;
 
-namespace MinoAssistant.UI
+namespace MinoAssistant.UI;
+
+public partial class MainWindow : Window
 {
-    public partial class MainWindow : Window
-    {
-        public MainWindow()
-        {
-            InitializeComponent();
-        }
-    }
+    public MainWindow() => InitializeComponent();
 }

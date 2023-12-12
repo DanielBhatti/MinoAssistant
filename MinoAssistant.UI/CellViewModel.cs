@@ -1,13 +1,12 @@
-﻿using MinoAssistant.Board;
-using MinoAssistant.Board.Block;
+﻿using MinoAssistant.Game;
+using MinoAssistant.Game.Block;
 
-namespace MinoAssistant.UI
+namespace MinoAssistant.UI;
+
+public class CellViewModel : ViewModelBase
 {
-    public class CellViewModel : ViewModelBase
-    {
-        private Cell Cell { get; }
-        public MinoColor Value { get => Cell.Value; }
+    private Cell Cell { get; }
+    public MinoColor Value => Cell.Value;
 
-        public CellViewModel(Cell cell) => Cell = cell;
-    }
+    public CellViewModel(Cell cell) => Cell = cell;
 }
